@@ -1,2 +1,3 @@
-# ai-diff-commit
-Atomates the creation of standardized Git commit messages using OpenAI's ChatGPT, ensuring adherence to the Conventional Commits specification for clear and meaningful commit history. It offers an intelligent, interactive way to craft commit descriptions directly from your code diffs.
+# AI Diff Commit
+
+Automates the creation of standardized Git commit messages using [OpenAI's API](https://platform.openai.com/docs/), ensuring adherence to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) for clear and meaningful commit history.
