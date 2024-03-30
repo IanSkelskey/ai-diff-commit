@@ -99,6 +99,14 @@ def is_in_git_repo():
         return False
 
 
+def has_git_changes():
+    status_command = ["git", "status", "--porcelain"]
+    status_output = subprocess.run(
+        status_command, capture_output=True, text=True
+    ).stdout
+    return len(status_output.strip()) > 0
+
+
 def generate_diff_for_untracked_file(file_path):
     """Generate a diff for an untracked file if it's not ignored."""
     if not is_git_ignored(file_path):
@@ -143,7 +151,14 @@ def main():
         print("Error: This program must be run inside a Git repository.")
         return
 
+    if not has_git_changes():
+        print("No changes to commit. Your working directory is clean.")
+        return
+
     commit_message = analyze_diff_with_chat_gpt()
+    if commit_message.strip() == "":
+        print("No commit message generated. Exiting without committing changes.")
+        return
     confirm_and_commit(commit_message)
 
 
