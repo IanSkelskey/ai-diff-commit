@@ -1,10 +1,14 @@
 from openai import OpenAI
-from constants import SYSTEM_PROMPT
+
 
 client = OpenAI()
 
 
 def analyze_diff_with_chat_gpt(diff_string: str):
+    # Read system prompt from lib/system_prompt.md
+    with open("lib/system_prompt.md", "r") as file:
+        SYSTEM_PROMPT = file.read()
+    
     try:
         completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
