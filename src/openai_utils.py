@@ -3,32 +3,40 @@ from openai import OpenAI
 
 client = OpenAI()
 
+with open("lib/system_prompt.md", "r") as file:
+    SYSTEM_PROMPT = file.read()
 
-def analyze_diff_with_chat_gpt(diff_string: str):
-    # Read system prompt from lib/system_prompt.md
-    with open("lib/system_prompt.md", "r") as file:
-        SYSTEM_PROMPT = file.read()
-    
+
+def _get_response(message: str):
     try:
         completion = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": diff_string},
+                {"role": "user", "content": message},
             ],
         )
-        # Trim the ``` from the start and end of the response
-        return completion.choices[0].message.content.strip("`")
+        return completion.choices[0].message.content
     except Exception as e:
         print(f"An error occurred: \n{e}")
 
 
-def rewrite_commit_message(commit_message: str, feedback: str):
+def analyze_diff_with_chat_gpt(diff_string: str):
+    return _get_response(diff_string).strip("`")
+
+
+def revise_commit_message(diff_string: str, commit_message: str, feedback: str):
     user_prompt = f"""
     You have generated the following commit message:
     
     ```
     {commit_message}
+    ```
+    
+    Based on the following diff:
+        
+    ``` 
+    {diff_string}
     ```
     
     Here is some feedback on the commit message:
@@ -38,15 +46,4 @@ def rewrite_commit_message(commit_message: str, feedback: str):
     Please rewrite the commit message based on the feedback.
     """
 
-    try:
-        completion = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": user_prompt},
-            ],
-        )
-        # Trim the ``` from the start and end of the response
-        return completion.choices[0].message.content.strip("`")
-    except Exception as e:
-        print(f"An error occurred: \n{e}")
+    return _get_response(user_prompt).strip("`")

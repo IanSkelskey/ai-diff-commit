@@ -14,9 +14,10 @@ As a developer committing changes to a Git repository, you are expected to:
 
 ## Input Specification
 
-You will receive the following input:
+You will receive one of the following inputs:
 
-- A code diff containing changes made to the code.
+- **A code diff alone**, containing changes made to the code.
+- **A code diff, a commit message**, and feedback. In this case, you are to revise the provided commit message based on the feedback and the diff. 
 
 ## Output Specification
 
@@ -69,7 +70,7 @@ Commit message with description and breaking change footer
 
 ```BREAKING CHANGE: `extends` key in config file is now used for extending other config files```
 
-- Commit message with ! to draw attention to breaking change
+Commit message with ! to draw attention to breaking change
  
 ```feat!: send an email to the customer when a product is shipped```
 

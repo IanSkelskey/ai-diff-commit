@@ -1,8 +1,8 @@
 from git_utils import is_in_git_repo, has_git_changes, get_diff_string
-from openai_utils import analyze_diff_with_chat_gpt, rewrite_commit_message
+from openai_utils import analyze_diff_with_chat_gpt, revise_commit_message
 import subprocess
 
-def confirm_and_commit(commit_message):
+def confirm_and_commit(diff_string, commit_message):
     print(f"Generated commit message:\n{commit_message}")
     response = input(
         "Do you want to commit these changes? (This will stage all changed files as well as commit and push the changes.) [y/N] "
@@ -16,12 +16,16 @@ def confirm_and_commit(commit_message):
         subprocess.run(push_command)
         print("Changes committed and pushed successfully.")
     else:
-        ## If the user doesn't want to commit, offer to generate a new commit message
-        response = input("Do you want to generate a new commit message? [y/N] ").lower()
+        ## If the user doesn't want to commit, ask for feedback and revise the commit message
+        response = input("Would you like to provide feedback on the commit message and revise it?").lower()
+        
         if response == "y":
-            main()
+            feedback = input("Please provide feedback on the commit message: ")
+            revised_commit_message = revise_commit_message(diff_string, commit_message, feedback)
+            confirm_and_commit(diff_string, revised_commit_message)
         else:
-            print("Exiting without committing changes.")
+            print("Changes not committed.")
+        
 
 
 def main():
@@ -43,7 +47,7 @@ def main():
         print("No commit message was generated.")
         return
 
-    confirm_and_commit(commit_message)
+    confirm_and_commit(diff_string, commit_message)
 
 
 if __name__ == "__main__":
