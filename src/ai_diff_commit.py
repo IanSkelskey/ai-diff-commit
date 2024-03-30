@@ -86,6 +86,19 @@ def is_git_ignored(file_path):
     return result.returncode == 0
 
 
+def is_in_git_repo():
+    try:
+        subprocess.run(
+            ["git", "rev-parse", "--is-inside-work-tree"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+        return True
+    except subprocess.CalledProcessError:
+        return False
+
+
 def generate_diff_for_untracked_file(file_path):
     """Generate a diff for an untracked file if it's not ignored."""
     if not is_git_ignored(file_path):
@@ -105,7 +118,9 @@ def generate_diff_for_untracked_file(file_path):
 
 def confirm_and_commit(commit_message):
     print(f"Generated commit message:\n{commit_message}")
-    response = input("Do you want to commit these changes? (This will stage all changed files as well as commit and push the changes.) [y/N] ").lower()
+    response = input(
+        "Do you want to commit these changes? (This will stage all changed files as well as commit and push the changes.) [y/N] "
+    ).lower()
     if response == "y":
         stage_command = ["git", "add", "."]
         commit_command = ["git", "commit", "-m", commit_message]
@@ -124,6 +139,10 @@ def confirm_and_commit(commit_message):
 
 
 def main():
+    if not is_in_git_repo():
+        print("Error: This program must be run inside a Git repository.")
+        return
+
     commit_message = analyze_diff_with_chat_gpt()
     confirm_and_commit(commit_message)
 
