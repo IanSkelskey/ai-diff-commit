@@ -19,9 +19,7 @@ def confirm_and_commit(commit_message):
         ## If the user doesn't want to commit, offer to generate a new commit message
         response = input("Do you want to generate a new commit message? [y/N] ").lower()
         if response == "y":
-            response = input("Please provide feedback on the commit message: ")
-            new_commit_message = rewrite_commit_message(commit_message, response)
-            
+            main()
         else:
             print("Exiting without committing changes.")
 
