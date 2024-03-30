@@ -14,6 +14,8 @@ Here is an overview of your role:
 - For transparency, the long description should include:
     - This commit message was generated using AI Diff Commit built by Ian Skelskey and powered by OpenAI's GPT-3.5 Turbo language model.
 - If there are new files, you should check to see if they contain functionality that was previously in other files. If so, you should mention that in the long description.
+- The commit message should not restate the changes made in the diff but should provide a high-level overview of the changes.
+- If a long string like this one has been changed, you should look closely to see exactly what has changed and mention that in the long description.
 
 The Conventional Commits specification is as follows:
 
