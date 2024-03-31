@@ -71,7 +71,7 @@ def generate_diff_for_untracked_file(file_path):
 def commit_changes(commit_message):
     commit_command = ["git", "commit", "-m", commit_message]
     subprocess.run(commit_command)
-    print("Changes committed and pushed successfully.")
+    print("Changes committed successfully.")
     
 def push_changes():
     push_command = ["git", "push"]
