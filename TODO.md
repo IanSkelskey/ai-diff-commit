@@ -8,5 +8,5 @@
 - [ ] Improve interface while still utilizing the command line for simplicity.
 - [ ] Add terminal arguments for customization.
   - [ ] Add argument for specifying the openai API language model.
-  - [ ] Add argument for automatically pushing changes.
+  - [x] Add argument for automatically pushing changes.
 - [ ] Add documentation for the script.
