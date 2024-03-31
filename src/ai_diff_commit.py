@@ -1,4 +1,6 @@
 import sys
+from openai_utils import analyze_diff_with_chat_gpt, revise_commit_message
+
 from git_utils import (
     is_in_git_repo,
     has_git_changes,
@@ -7,9 +9,6 @@ from git_utils import (
     commit_changes,
     push_changes,
 )
-from openai_utils import analyze_diff_with_chat_gpt, revise_commit_message
-import subprocess
-
 
 def confirm_and_commit(diff_string, commit_message):
     print(f"Generated commit message:\n{commit_message}")
@@ -35,6 +34,7 @@ def confirm_and_commit(diff_string, commit_message):
 
 
 def main():
+    auto_push = '-p' in sys.argv
     if not is_in_git_repo():
         print("Error: This program must be run inside a Git repository.")
         return
@@ -55,6 +55,10 @@ def main():
 
     confirm_and_commit(diff_string, commit_message)
 
+    if auto_push:
+        push_changes()
+        return
+        
     response = input(
         "Would you like to push the changes to the remote repository? [y/N] "
     )
