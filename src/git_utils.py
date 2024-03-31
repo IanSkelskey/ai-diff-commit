@@ -67,3 +67,18 @@ def generate_diff_for_untracked_file(file_path):
             text=True,
         ).stdout
     return ""
+
+def commit_changes(commit_message):
+    commit_command = ["git", "commit", "-m", commit_message]
+    subprocess.run(commit_command)
+    print("Changes committed and pushed successfully.")
+    
+def push_changes():
+    push_command = ["git", "push"]
+    subprocess.run(push_command)
+    print("Changes pushed successfully.")
+    
+def stage_changes(file_path = "."):
+    stage_command = ["git", "add", file_path]
+    subprocess.run(stage_command)
+    print("Changes staged successfully.")

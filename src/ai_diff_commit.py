@@ -1,4 +1,12 @@
-from git_utils import is_in_git_repo, has_git_changes, get_diff_string
+import sys
+from git_utils import (
+    is_in_git_repo,
+    has_git_changes,
+    get_diff_string,
+    stage_changes,
+    commit_changes,
+    push_changes,
+)
 from openai_utils import analyze_diff_with_chat_gpt, revise_commit_message
 import subprocess
 
@@ -6,18 +14,12 @@ import subprocess
 def confirm_and_commit(diff_string, commit_message):
     print(f"Generated commit message:\n{commit_message}")
     response = input(
-        "Do you want to commit these changes? (This will stage all changed files as well as commit and push the changes.) [y/N] "
+        "Do you want to commit these changes? (This will stage all changed files and commit the changes.) [y/N] "
     ).lower()
     if response == "y":
-        stage_command = ["git", "add", "."]
-        commit_command = ["git", "commit", "-m", commit_message]
-        push_command = ["git", "push"]
-        subprocess.run(stage_command)
-        subprocess.run(commit_command)
-        subprocess.run(push_command)
-        print("Changes committed and pushed successfully.")
+        stage_changes()
+        commit_changes(commit_message)
     else:
-        ## If the user doesn't want to commit, ask for feedback and revise the commit message
         response = input(
             "Would you like to provide feedback on the commit message and revise it?  [y/N] "
         ).lower()
@@ -52,6 +54,15 @@ def main():
         return
 
     confirm_and_commit(diff_string, commit_message)
+
+    response = input(
+        "Would you like to push the changes to the remote repository? [y/N] "
+    )
+
+    if response == "y":
+        push_changes()
+    else:
+        print("Changes not pushed. You can push changes later using 'git push'.")
 
 
 if __name__ == "__main__":
