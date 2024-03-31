@@ -5,6 +5,7 @@ from git_utils import (
     is_in_git_repo,
     has_git_changes,
     get_diff_string,
+    get_list_of_changed_files,
     stage_changes,
     commit_changes,
     push_changes,
@@ -42,6 +43,12 @@ def main():
     if not has_git_changes():
         print("No changes to commit. Your working directory is clean.")
         return
+    
+    changed_files = get_list_of_changed_files()
+    
+    print("Changed files:")
+    for file in changed_files:
+        print(file)
 
     diff_string = get_diff_string()
     if not diff_string:

@@ -82,3 +82,9 @@ def stage_changes(file_path = "."):
     stage_command = ["git", "add", file_path]
     subprocess.run(stage_command)
     print("Changes staged successfully.")
+    
+def get_list_of_changed_files():
+    status_output = subprocess.run(
+        ["git", "status", "--porcelain"], capture_output=True, text=True
+    ).stdout
+    return [line.split(" ", 1)[1] for line in status_output.split("\n") if line]
