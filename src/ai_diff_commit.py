@@ -2,6 +2,7 @@ from git_utils import is_in_git_repo, has_git_changes, get_diff_string
 from openai_utils import analyze_diff_with_chat_gpt, revise_commit_message
 import subprocess
 
+
 def confirm_and_commit(diff_string, commit_message):
     print(f"Generated commit message:\n{commit_message}")
     response = input(
@@ -17,15 +18,18 @@ def confirm_and_commit(diff_string, commit_message):
         print("Changes committed and pushed successfully.")
     else:
         ## If the user doesn't want to commit, ask for feedback and revise the commit message
-        response = input("Would you like to provide feedback on the commit message and revise it?").lower()
-        
+        response = input(
+            "Would you like to provide feedback on the commit message and revise it?  [y/N] "
+        ).lower()
+
         if response == "y":
             feedback = input("Please provide feedback on the commit message: ")
-            revised_commit_message = revise_commit_message(diff_string, commit_message, feedback)
+            revised_commit_message = revise_commit_message(
+                diff_string, commit_message, feedback
+            )
             confirm_and_commit(diff_string, revised_commit_message)
         else:
             print("Changes not committed.")
-        
 
 
 def main():
