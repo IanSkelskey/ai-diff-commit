@@ -10,7 +10,7 @@ with open("lib/system_prompt.md", "r") as file:
 def _get_response(message: str):
     try:
         completion = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4-0125-preview",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": message},
