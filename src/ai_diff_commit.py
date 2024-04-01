@@ -17,6 +17,7 @@ def confirm_and_commit(diff_string, commit_message):
     if response == "y":
         stage_changes()
         commit_changes(commit_message)
+        return True
     else:
         revise_commit_message_if_requested(diff_string, commit_message)
 
@@ -28,6 +29,7 @@ def revise_commit_message_if_requested(diff_string, commit_message):
         confirm_and_commit(diff_string, revised_commit_message)
     else:
         print("Changes not committed.")
+        return False
 
 def print_changed_files(changed_files):
     print("Changed files:")
@@ -57,7 +59,8 @@ def main():
         print("No commit message was generated.")
         return
 
-    confirm_and_commit(diff_string, commit_message)
+    if not confirm_and_commit(diff_string, commit_message):
+        return
 
     if auto_push:
         push_changes()
