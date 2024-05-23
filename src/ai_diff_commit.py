@@ -12,6 +12,7 @@ from git_utils import (
 )
 from prompt_utils import select_changed_files, confirm_commit_message, request_feedback, prompt_push_changes
 from colors import INFO, WARNING, ERROR, SUCCESS
+from InquirerPy import prompt
 
 def confirm_and_commit(diff_string, commit_message, auto_push=False):
     if confirm_commit_message(commit_message):
@@ -24,7 +25,16 @@ def confirm_and_commit(diff_string, commit_message, auto_push=False):
         revise_commit_message_if_requested(diff_string, commit_message, auto_push)
 
 def revise_commit_message_if_requested(diff_string, commit_message, auto_push=False):
-    if input(f"{WARNING}Would you like to provide feedback on the commit message and revise it? [y/N] ").lower() == "y":
+    questions = [
+        {
+            "type": "confirm",
+            "message": "Would you like to provide feedback on the commit message and revise it?",
+            "name": "revise",
+            "default": False,
+        }
+    ]
+    answers = prompt(questions)
+    if answers["revise"]:
         feedback = request_feedback()
         revised_commit_message = revise_commit_message(diff_string, commit_message, feedback)
         confirm_and_commit(diff_string, revised_commit_message, auto_push)
@@ -67,6 +77,9 @@ def main():
         print(f"{ERROR}No commit message was generated.")
         return
 
+    # Print the commit message separately with color formatting
+    print(f"{INFO}Generated commit message:\n{commit_message}\n")
+    
     if not confirm_and_commit(diff_string, commit_message, auto_push):
         return
 
