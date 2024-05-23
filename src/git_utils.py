@@ -19,6 +19,9 @@ def get_list_of_changed_files():
 def get_diff_string_for_file(file_path):
     return subprocess.run(["git", "diff", file_path], capture_output=True, text=True).stdout
 
+def get_diff_string():
+    return subprocess.run(["git", "diff"], capture_output=True, text=True).stdout
+
 def stage_changes(file_path="."):
     subprocess.run(["git", "add", file_path])
     print("Changes staged successfully.")
