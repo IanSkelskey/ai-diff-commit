@@ -88,3 +88,6 @@ def get_list_of_changed_files():
         ["git", "status", "--porcelain"], capture_output=True, text=True
     ).stdout
     return [line.split(" ", 1)[1] for line in status_output.split("\n") if line]
+
+def get_diff_string_for_file(file_path):
+    return subprocess.run(["git", "diff", file_path], capture_output=True, text=True).stdout
