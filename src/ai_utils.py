@@ -1,9 +1,14 @@
+import os
 from openai import OpenAI
-from colors import INFO, WARNING, ERROR, SUCCESS
+from colors import INFO, ERROR
+
+# Determine the absolute path of the script's directory
+script_dir = os.path.dirname(os.path.abspath(__file__))
+system_prompt_path = os.path.join(script_dir, '..', 'lib', 'system_prompt.md')
 
 client = OpenAI()
 
-with open("lib/system_prompt.md", "r") as file:
+with open(system_prompt_path, "r") as file:
     SYSTEM_PROMPT = file.read()
 
 def _get_response(message: str):
