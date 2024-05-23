@@ -14,22 +14,24 @@ from colorama import init, Fore, Style
 # Initialize colorama
 init(autoreset=True)
 
-def confirm_and_commit(diff_string, commit_message):
+def confirm_and_commit(diff_string, commit_message, auto_push=False):
     print(f"{Fore.CYAN}Generated commit message:\n{commit_message}")
     response = input(f"{Fore.YELLOW}Do you want to commit these changes? (This will stage all changed files and commit the changes.) [y/N] ").lower()
     if response == "y":
         stage_changes()
         commit_changes(commit_message)
+        if auto_push:
+            push_changes()
         return True
     else:
-        revise_commit_message_if_requested(diff_string, commit_message)
+        revise_commit_message_if_requested(diff_string, commit_message, auto_push)
 
-def revise_commit_message_if_requested(diff_string, commit_message):
+def revise_commit_message_if_requested(diff_string, commit_message, auto_push=False):
     response = input(f"{Fore.YELLOW}Would you like to provide feedback on the commit message and revise it? [y/N] ").lower()
     if response == "y":
         feedback = input(f"{Fore.YELLOW}Please provide feedback on the commit message: ")
         revised_commit_message = revise_commit_message(diff_string, commit_message, feedback)
-        confirm_and_commit(diff_string, revised_commit_message)
+        confirm_and_commit(diff_string, revised_commit_message, auto_push)
     else:
         print(f"{Fore.RED}Changes not committed.")
         return False
@@ -37,7 +39,7 @@ def revise_commit_message_if_requested(diff_string, commit_message):
 def print_changed_files(changed_files):
     print(f"{Fore.GREEN}Changed files:")
     for file in changed_files:
-        print(f"{Fore.GREEN}- {file}")
+        print(file)
 
 def main():
     auto_push = '-p' in sys.argv or '--push' in sys.argv
@@ -62,18 +64,17 @@ def main():
         print(f"{Fore.RED}No commit message was generated.")
         return
 
-    if not confirm_and_commit(diff_string, commit_message):
+    if not confirm_and_commit(diff_string, commit_message, auto_push):
         return
 
     if auto_push:
         push_changes()
-        return
-
-    response = input(f"{Fore.YELLOW}Would you like to push the changes to the remote repository? [y/N] ")
-    if response == "y":
-        push_changes()
     else:
-        print(f"{Fore.YELLOW}Changes not pushed. You can push changes later using 'git push'.")
+        response = input(f"{Fore.YELLOW}Would you like to push the changes to the remote repository? [y/N] ")
+        if response == "y":
+            push_changes()
+        else:
+            print(f"{Fore.YELLOW}Changes not pushed. You can push changes later using 'git push'.")
 
 if __name__ == "__main__":
     main()
