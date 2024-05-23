@@ -2,6 +2,10 @@
 
 Automates the creation of standardized Git commit messages using [OpenAI's API](https://platform.openai.com/docs/), ensuring adherence to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) for clear and meaningful commit history.
 
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![OpenAI](https://img.shields.io/badge/OpenAI-00A79D?style=for-the-badge&logo=openai&logoColor=white)
+![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+
 ## Features
 
 - **Automated Commit Messages**: Generate standardized commit messages based on the changes in your repository.
@@ -16,7 +20,7 @@ Automates the creation of standardized Git commit messages using [OpenAI's API](
 - **Always Adds All Changes**: Adds all changes in the repository to the commit, which may not be suitable for all scenarios.
 - **Requires a Git Repository**: Needs to be run in a Git repository to access the changes for generating commit messages.
 
-## Usage Instructions (Windows)
+## Installation Instructions (Windows)
 
 I have only tested this on Windows, but it should work on other operating systems with minor modifications. For now, I will provide instructions for setting up the script on Windows that worked for me.
 
@@ -25,10 +29,11 @@ I have only tested this on Windows, but it should work on other operating system
     ```bash
     pip install -r requirements.txt
     ```
-3. Set up your OpenAI API key by creating a `.env` file in the project directory and adding the following line:
-    ```plaintext
-    OPENAI_API_KEY=<YOUR_API_KEY>
+    or
+    ```bash
+    python -m pip install -r requirements.txt
     ```
+3. Add an environment variable named `OPENAI_API_KEY` with your OpenAI API key as the value. This is required to access the GPT model for generating commit messages.
 4. Move the repository contents to wherever to store scripts. I used `C:\Scripts` for this example.
 5. Add the path to the `C:\Scripts` directory to your system's PATH environment variable.
 6. Create a `ai_diff_commit.bat` file in the `C:\Scripts` directory with the following content:
@@ -37,6 +42,14 @@ I have only tested this on Windows, but it should work on other operating system
     python C:\Scripts\ai_diff_commit\src\ai_diff_commit.py %*
     ```
 7. Now you can run the `ai_diff_commit` command from any directory to generate commit messages based on the changes in your repository.
+
+## Usage Instructions (Windows)
+
+Once you have set up the script using the installation instructions, you can use the `ai_diff_commit` command to generate commit messages based on the changes in your repository.
+
+### Flags
+
+- `-p`, `--push`: Automatically push the changes to the remote repository after committing.
 
 ## Example Output
 
