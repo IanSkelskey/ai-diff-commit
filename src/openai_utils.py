@@ -10,12 +10,13 @@ with open("lib/system_prompt.md", "r") as file:
 def _get_response(message: str):
     try:
         completion = client.chat.completions.create(
-            model="gpt-4-0125-preview",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": message},
             ],
         )
+        print("Model: ", completion.model)
         return completion.choices[0].message.content
     except Exception as e:
         print(f"An error occurred: \n{e}")
