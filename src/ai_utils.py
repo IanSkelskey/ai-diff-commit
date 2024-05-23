@@ -1,8 +1,5 @@
 from openai import OpenAI
-from colorama import init, Fore, Style
-
-# Initialize colorama
-init(autoreset=True)
+from colors import INFO, WARNING, ERROR, SUCCESS
 
 client = OpenAI()
 
@@ -18,10 +15,10 @@ def _get_response(message: str):
                 {"role": "user", "content": message},
             ],
         )
-        print(f"{Fore.CYAN}Model: {completion.model}")
+        print(f"{INFO}Model: {completion.model}")
         return completion.choices[0].message.content
     except Exception as e:
-        print(f"{Fore.RED}An error occurred: \n{e}")
+        print(f"{ERROR}An error occurred: \n{e}")
 
 def analyze_diff_with_chat_gpt(diff_string: str):
     return _get_response(diff_string).strip("`")
