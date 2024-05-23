@@ -1,5 +1,4 @@
 import subprocess
-import os
 
 def is_in_git_repo():
     try:
@@ -14,7 +13,21 @@ def has_git_changes():
 
 def get_list_of_changed_files():
     status_output = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True).stdout
-    return [line for line in status_output.strip().split('\n') if line]
+    changed_files = [line for line in status_output.strip().split('\n') if line]
+
+    new_files = []
+    for line in changed_files:
+        status = line[0]
+        print(status)
+        filename = line[2:].strip()
+        if filename.endswith('/'):
+            files_in_directory = subprocess.run(["git", "ls-files", "--others", "--exclude-standard", filename], capture_output=True, text=True).stdout
+            for file in files_in_directory.strip().split('\n'):
+                new_files.append(f"{status} {file}")
+        else:
+            new_files.append(line)
+
+    return new_files
 
 def get_diff_string_for_file(file_path):
     return subprocess.run(["git", "diff", file_path], capture_output=True, text=True).stdout

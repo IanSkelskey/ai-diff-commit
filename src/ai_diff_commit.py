@@ -61,6 +61,7 @@ def main():
             return
     else:
         changed_files = [(line[0], line[2:].strip()) for line in get_list_of_changed_files()]
+
         selected_files = select_changed_files(changed_files)
         
         if not selected_files:
@@ -68,6 +69,7 @@ def main():
             return
         
         diff_string = "\n".join([get_diff_string_for_file(file) for file in selected_files])
+        print(f"{INFO}Selected files:\n{selected_files}\n")
         if not diff_string:
             print(f"{ERROR}No changes detected in the selected files.")
             return
