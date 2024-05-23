@@ -49,7 +49,14 @@ Once you have set up the script using the installation instructions, you can use
 
 ### Flags
 
+- `-a`, `--all`: Add all changes in the repository to the commit. By default, only the modified files are added.
 - `-p`, `--push`: Automatically push the changes to the remote repository after committing.
+
+For example, to generate a commit message based on all changes in the repository and push the changes to the remote repository, you can use the following command:
+
+```bash
+ai_diff_commit -a -p
+```
 
 ## Example Output
 
