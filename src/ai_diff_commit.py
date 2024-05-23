@@ -69,7 +69,6 @@ def main():
             return
         
         diff_string = "\n".join([get_diff_string_for_file(file) for file in selected_files])
-        print(f"{INFO}Selected files:\n{selected_files}\n")
         if not diff_string:
             print(f"{ERROR}No changes detected in the selected files.")
             return

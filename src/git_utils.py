@@ -18,8 +18,7 @@ def get_list_of_changed_files():
     new_files = []
     for line in changed_files:
         status = line[0]
-        print(status)
-        filename = line[2:].strip()
+        filename = line[3:].strip() if status == '?' else line[2:].strip()
         if filename.endswith('/'):
             files_in_directory = subprocess.run(["git", "ls-files", "--others", "--exclude-standard", filename], capture_output=True, text=True).stdout
             for file in files_in_directory.strip().split('\n'):
@@ -30,7 +29,15 @@ def get_list_of_changed_files():
     return new_files
 
 def get_diff_string_for_file(file_path):
-    return subprocess.run(["git", "diff", file_path], capture_output=True, text=True).stdout
+    if subprocess.run(["git", "ls-files", "--error-unmatch", file_path], capture_output=True, text=True).returncode != 0:
+        try:
+            with open(file_path, 'r') as file:
+                content = file.read()
+            return f"Untracked file: {file_path}\n{content}"
+        except FileNotFoundError:
+            return f"Untracked file: {file_path}\nFile not found."
+    else:
+        return subprocess.run(["git", "diff", file_path], capture_output=True, text=True).stdout
 
 def get_diff_string():
     return subprocess.run(["git", "diff"], capture_output=True, text=True).stdout
