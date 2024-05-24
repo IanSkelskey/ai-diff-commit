@@ -16,15 +16,15 @@ from prompt_utils import select_changed_files, confirm_commit_message, request_f
 from colors import INFO, WARNING, ERROR, SUCCESS, GIT_INFO, AI_INFO, GENERATED
 from InquirerPy import prompt
 
-def confirm_and_commit(diff_string, commit_message):
+def confirm_and_commit(diff_string, commit_message, selected_files):
     if confirm_commit_message(commit_message):
-        stage_changes()
+        stage_changes(selected_files)
         commit_changes(commit_message)
         return True
     else:
-        return revise_commit_message_if_requested(diff_string, commit_message)
+        return revise_commit_message_if_requested(diff_string, commit_message, selected_files)
 
-def revise_commit_message_if_requested(diff_string, commit_message):
+def revise_commit_message_if_requested(diff_string, commit_message, selected_files):
     questions = [
         {
             "type": "confirm",
@@ -37,7 +37,7 @@ def revise_commit_message_if_requested(diff_string, commit_message):
     if answers["revise"]:
         feedback = request_feedback()
         revised_commit_message = revise_commit_message(diff_string, commit_message, feedback)
-        return confirm_and_commit(diff_string, revised_commit_message)
+        return confirm_and_commit(diff_string, revised_commit_message, selected_files)
     else:
         print(f"{ERROR}Changes not committed.")
         return False
@@ -62,6 +62,7 @@ def main():
         if not diff_string:
             print(wrap_text(f"{ERROR}No changes detected in the repository."))
             return
+        selected_files = ["."]
     else:
         changed_files = [(line[0], line[2:].strip()) for line in get_list_of_changed_files()]
 
@@ -84,7 +85,7 @@ def main():
     # Print the commit message separately with color formatting
     print(wrap_text(f"{GENERATED}Generated commit message:\n{commit_message}\n"))
     
-    if not confirm_and_commit(diff_string, commit_message):
+    if not confirm_and_commit(diff_string, commit_message, selected_files):
         return
 
     if auto_push:
