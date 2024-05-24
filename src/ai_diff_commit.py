@@ -10,11 +10,18 @@ from git_utils import (
     commit_changes,
     push_changes,
     clear_console,
-    get_current_branch_name
+    get_current_branch_name,
 )
-from prompt_utils import select_changed_files, confirm_commit_message, request_feedback, prompt_push_changes, wrap_text
-from colors import INFO, WARNING, ERROR, SUCCESS, GIT_INFO, AI_INFO, GENERATED
+from prompt_utils import (
+    select_changed_files,
+    confirm_commit_message,
+    request_feedback,
+    prompt_push_changes,
+    wrap_text,
+)
+from colors import INFO, WARNING, ERROR, SUCCESS, GIT_INFO, GENERATED
 from InquirerPy import prompt
+
 
 def confirm_and_commit(diff_string, commit_message, selected_files):
     if confirm_commit_message(commit_message):
@@ -22,7 +29,10 @@ def confirm_and_commit(diff_string, commit_message, selected_files):
         commit_changes(commit_message)
         return True
     else:
-        return revise_commit_message_if_requested(diff_string, commit_message, selected_files)
+        return revise_commit_message_if_requested(
+            diff_string, commit_message, selected_files
+        )
+
 
 def revise_commit_message_if_requested(diff_string, commit_message, selected_files):
     questions = [
@@ -36,7 +46,12 @@ def revise_commit_message_if_requested(diff_string, commit_message, selected_fil
     answers = prompt(questions)
     if answers["revise"]:
         feedback = request_feedback()
-        revised_commit_message = revise_commit_message(diff_string, commit_message, feedback)
+        revised_commit_message = revise_commit_message(
+            diff_string, commit_message, feedback
+        )
+        print(
+            wrap_text(f"{GENERATED}Revised commit message:\n{revised_commit_message}\n")
+        )
         return confirm_and_commit(diff_string, revised_commit_message, selected_files)
     else:
         print(f"{ERROR}Changes not committed.")
@@ -46,15 +61,23 @@ def main():
     branch_name = get_current_branch_name()
     clear_console()
     print(wrap_text(f"{GIT_INFO}Current branch: {branch_name}"))
-    auto_push = '-p' in sys.argv or '--push' in sys.argv
-    include_all = '-a' in sys.argv or '--all' in sys.argv
+    auto_push = "-p" in sys.argv or "--push" in sys.argv
+    include_all = "-a" in sys.argv or "--all" in sys.argv
 
     if not is_in_git_repo():
-        print(wrap_text(f"{ERROR}Error: This program must be run inside a Git repository."))
+        print(
+            wrap_text(
+                f"{ERROR}Error: This program must be run inside a Git repository."
+            )
+        )
         return
 
     if not has_git_changes():
-        print(wrap_text(f"{SUCCESS}No changes to commit. Your working directory is clean."))
+        print(
+            wrap_text(
+                f"{SUCCESS}No changes to commit. Your working directory is clean."
+            )
+        )
         return
 
     if include_all:
@@ -64,15 +87,19 @@ def main():
             return
         selected_files = ["."]
     else:
-        changed_files = [(line[0], line[2:].strip()) for line in get_list_of_changed_files()]
+        changed_files = [
+            (line[0], line[2:].strip()) for line in get_list_of_changed_files()
+        ]
 
         selected_files = select_changed_files(changed_files)
-        
+
         if not selected_files:
             print(wrap_text(f"{ERROR}No files selected. Exiting."))
             return
-        
-        diff_string = "\n".join([get_diff_string_for_file(file) for file in selected_files])
+
+        diff_string = "\n".join(
+            [get_diff_string_for_file(file) for file in selected_files]
+        )
         if not diff_string:
             print(wrap_text(f"{ERROR}No changes detected in the selected files."))
             return
@@ -84,7 +111,7 @@ def main():
 
     # Print the commit message separately with color formatting
     print(wrap_text(f"{GENERATED}Generated commit message:\n{commit_message}\n"))
-    
+
     if not confirm_and_commit(diff_string, commit_message, selected_files):
         return
 
@@ -94,7 +121,12 @@ def main():
         if prompt_push_changes():
             push_changes()
         else:
-            print(wrap_text(f"{WARNING}Changes not pushed. You can push changes later using 'git push'."))
+            print(
+                wrap_text(
+                    f"{WARNING}Changes not pushed. You can push changes later using 'git push'."
+                )
+            )
+
 
 if __name__ == "__main__":
     main()
