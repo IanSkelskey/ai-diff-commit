@@ -1,6 +1,7 @@
 import subprocess
 import os
 import mimetypes
+from colors import INFO, WARNING, ERROR, SUCCESS, GIT_INFO, GENERATED
 
 # Constants for Git commands and options
 GIT_COMMAND = "git"
@@ -63,14 +64,14 @@ def get_diff_string_for_file(file_path):
                 content = file.read()
             return f"Untracked file: {file_path}\n{content}"
         except FileNotFoundError:
-            return f"Untracked file: {file_path}\nFile not found."
+            return f"{ERROR}Untracked file: {file_path}\nFile not found."
         except UnicodeDecodeError:
-            return f"Untracked file: {file_path}\nBinary file detected - Skipping diff."
+            return f"{ERROR}Untracked file: {file_path}\nBinary file detected - Skipping diff."
     else:
         try:
             return subprocess.run([GIT_COMMAND] + GIT_DIFF + [file_path], capture_output=CAPTURE_OUTPUT, text=TEXT).stdout
         except UnicodeDecodeError:
-            return f"Tracked file: {file_path}\nBinary file detected - Skipping diff."
+            return f"{ERROR}Tracked file: {file_path}\nBinary file detected - Skipping diff."
 
 def get_diff_string():
     return subprocess.run([GIT_COMMAND] + GIT_DIFF, capture_output=CAPTURE_OUTPUT, text=TEXT).stdout
@@ -78,15 +79,15 @@ def get_diff_string():
 def stage_changes(selected_files=["."]):
     for file_path in selected_files:
         subprocess.run([GIT_COMMAND] + GIT_ADD + [file_path], stdout=DEVNULL, stderr=DEVNULL)
-    print("Changes staged successfully.")
+    print(f"{GIT_INFO}Changes staged successfully.")
 
 def commit_changes(commit_message):
     subprocess.run([GIT_COMMAND] + GIT_COMMIT + [commit_message], stdout=DEVNULL, stderr=DEVNULL)
-    print("Changes committed successfully.")
+    print(f"{GIT_INFO}Changes committed successfully.")
 
 def push_changes():
     subprocess.run([GIT_COMMAND] + GIT_PUSH, stdout=DEVNULL, stderr=DEVNULL)
-    print("Changes pushed successfully.")
+    print(f"{GIT_INFO}Changes pushed successfully.")
 
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
