@@ -13,7 +13,7 @@ from git_utils import (
     get_current_branch_name
 )
 from prompt_utils import select_changed_files, confirm_commit_message, request_feedback, prompt_push_changes
-from colors import INFO, WARNING, ERROR, SUCCESS
+from colors import INFO, WARNING, ERROR, SUCCESS, GIT_INFO, AI_INFO, GENERATED
 from InquirerPy import prompt
 
 def confirm_and_commit(diff_string, commit_message, auto_push=False):
@@ -47,7 +47,7 @@ def revise_commit_message_if_requested(diff_string, commit_message, auto_push=Fa
 def main():
     branch_name = get_current_branch_name()
     clear_console()
-    print(f"{INFO}Current branch: {branch_name}")
+    print(f"{GIT_INFO}Current branch: {branch_name}")
     auto_push = '-p' in sys.argv or '--push' in sys.argv
     include_all = '-a' in sys.argv or '--all' in sys.argv
 
@@ -84,7 +84,8 @@ def main():
         return
 
     # Print the commit message separately with color formatting
-    print(f"{INFO}Generated commit message:\n{commit_message}\n")
+    print(f"{AI_INFO}Generated commit message:")
+    print(f"{GENERATED}{commit_message}")
     
     if not confirm_and_commit(diff_string, commit_message, auto_push):
         return

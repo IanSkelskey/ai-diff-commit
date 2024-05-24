@@ -1,6 +1,6 @@
 import os
 from openai import OpenAI
-from colors import INFO, ERROR
+from colors import AI_INFO, ERROR
 
 # Determine the absolute path of the script's directory
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -23,7 +23,7 @@ def _get_response(message: str):
                 {"role": "user", "content": message},
             ],
         )
-        print(f"{INFO}Language Model: {completion.model}")
+        print(f"{AI_INFO}Language Model: {completion.model}")
         return completion.choices[0].message.content
     except Exception as e:
         print(f"{ERROR}An error occurred: \n{e}")
