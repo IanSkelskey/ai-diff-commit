@@ -25,23 +25,17 @@ Automates the creation of standardized Git commit messages using [OpenAI's API](
 I have only tested this on Windows, but it should work on other operating systems with minor modifications. For now, I will provide instructions for setting up the script on Windows that worked for me.
 
 1. Clone the repository and navigate to the project directory.
-2. Install the required dependencies using the following command:
+2. Run the installation script using the following command:
     ```bash
-    pip install -r requirements.txt
+    python install.py
     ```
-    or
-    ```bash
-    python -m pip install -r requirements.txt
-    ```
-3. Add an environment variable named `OPENAI_API_KEY` with your OpenAI API key as the value. This is required to access the GPT model for generating commit messages.
-4. Move the repository contents to wherever to store scripts. I used `C:\Scripts` for this example.
-5. Add the path to the `C:\Scripts` directory to your system's PATH environment variable.
-6. Create a `ai_diff_commit.bat` file in the `C:\Scripts` directory with the following content:
-    ```batch
-    @echo off
-    python C:\Scripts\ai_diff_commit\src\ai_diff_commit.py %*
-    ```
-7. Now you can run the `ai_diff_commit` command from any directory to generate commit messages based on the changes in your repository.
+   This script will:
+   - Install the required dependencies.
+   - Prompt you to enter your OpenAI API key and set it as an environment variable.
+   - Move the repository contents to `C:\Scripts\ai_diff_commit`.
+   - Add the `C:\Scripts` directory to your system's PATH environment variable.
+   - Create a `ai_diff_commit.bat` file in the `C:\Scripts` directory to run the script from any location.
+
 
 ## Usage Instructions (Windows)
 
