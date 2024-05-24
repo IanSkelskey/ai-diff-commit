@@ -1,5 +1,16 @@
 from InquirerPy import prompt
 
+def get_api_key():
+    questions = [
+        {
+            "type": "input",
+            "message": "Please enter your OpenAI API key:",
+            "name": "api_key",
+        }
+    ]
+    answers = prompt(questions)
+    return answers["api_key"]
+
 def select_changed_files(changed_files):
     STATUS_DESCRIPTIONS = {
         "A": "Addition",
