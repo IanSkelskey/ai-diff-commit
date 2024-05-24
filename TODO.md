@@ -15,3 +15,6 @@
 - [ ] Add option to select all files within a directory.
 - [x] Notify the user of what branch they are on.
 - [ ] If the remote branch does not exist, create it.
+- [ ] Add optional organization instructions.
+  - [ ] Project specific scope definitions and descriptions. e.g. `(backend)`: for backend changes, `(frontend)`: for frontend changes, etc.
+  - [ ] Any organization-specific instructions.

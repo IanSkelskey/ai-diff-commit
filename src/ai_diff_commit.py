@@ -16,17 +16,15 @@ from prompt_utils import select_changed_files, confirm_commit_message, request_f
 from colors import INFO, WARNING, ERROR, SUCCESS, GIT_INFO, AI_INFO, GENERATED
 from InquirerPy import prompt
 
-def confirm_and_commit(diff_string, commit_message, auto_push=False):
+def confirm_and_commit(diff_string, commit_message):
     if confirm_commit_message(commit_message):
         stage_changes()
         commit_changes(commit_message)
-        if auto_push:
-            push_changes()
         return True
     else:
-        revise_commit_message_if_requested(diff_string, commit_message, auto_push)
+        return revise_commit_message_if_requested(diff_string, commit_message)
 
-def revise_commit_message_if_requested(diff_string, commit_message, auto_push=False):
+def revise_commit_message_if_requested(diff_string, commit_message):
     questions = [
         {
             "type": "confirm",
@@ -39,7 +37,7 @@ def revise_commit_message_if_requested(diff_string, commit_message, auto_push=Fa
     if answers["revise"]:
         feedback = request_feedback()
         revised_commit_message = revise_commit_message(diff_string, commit_message, feedback)
-        confirm_and_commit(diff_string, revised_commit_message, auto_push)
+        return confirm_and_commit(diff_string, revised_commit_message)
     else:
         print(f"{ERROR}Changes not committed.")
         return False
@@ -86,7 +84,7 @@ def main():
     # Print the commit message separately with color formatting
     print(wrap_text(f"{GENERATED}Generated commit message:\n{commit_message}\n"))
     
-    if not confirm_and_commit(diff_string, commit_message, auto_push):
+    if not confirm_and_commit(diff_string, commit_message):
         return
 
     if auto_push:
