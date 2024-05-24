@@ -1,7 +1,7 @@
 import subprocess
 import os
 import mimetypes
-from colors import INFO, WARNING, ERROR, SUCCESS, GIT_INFO, GENERATED
+from colors import INFO, WARNING, ERROR, SUCCESS, GIT_INFO
 
 # Constants for Git commands and options
 GIT_COMMAND = "git"
@@ -51,7 +51,9 @@ def get_list_of_changed_files():
     return new_files
 
 def is_binary_file(file_path):
+    print(f"{INFO}Checking if {file_path} is a binary file.")
     mime_type, _ = mimetypes.guess_type(file_path)
+    print(f"{INFO}Mime type: {mime_type}")
     return mime_type is not None and mime_type.startswith('image')
 
 def get_diff_string_for_file(file_path):
@@ -79,15 +81,15 @@ def get_diff_string():
 def stage_changes(selected_files=["."]):
     for file_path in selected_files:
         subprocess.run([GIT_COMMAND] + GIT_ADD + [file_path], stdout=DEVNULL, stderr=DEVNULL)
-    print(f"{GIT_INFO}Changes staged successfully.")
+    print(f"{SUCCESS}Changes staged successfully.")
 
 def commit_changes(commit_message):
     subprocess.run([GIT_COMMAND] + GIT_COMMIT + [commit_message], stdout=DEVNULL, stderr=DEVNULL)
-    print(f"{GIT_INFO}Changes committed successfully.")
+    print(f"{SUCCESS}Changes committed successfully.")
 
 def push_changes():
     subprocess.run([GIT_COMMAND] + GIT_PUSH, stdout=DEVNULL, stderr=DEVNULL)
-    print(f"{GIT_INFO}Changes pushed successfully.")
+    print(f"{SUCCESS}Changes pushed successfully.")
 
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')

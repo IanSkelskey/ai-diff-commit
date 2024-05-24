@@ -20,6 +20,12 @@ Automates the creation of standardized Git commit messages using [OpenAI's API](
 - **Always Adds All Changes**: Adds all changes in the repository to the commit, which may not be suitable for all scenarios.
 - **Requires a Git Repository**: Needs to be run in a Git repository to access the changes for generating commit messages.
 
+## Dependencies
+
+- [**Colorama**](https://pypi.org/project/colorama/): For colored output in the terminal.
+- [**OpenAI**](https://pypi.org/project/openai/): For interacting with the OpenAI API.
+- [**InquirerPy**](https://pypi.org/project/InquirerPy/): For interactive command-line user interfaces.
+
 ## Installation Instructions (Windows)
 
 I have only tested this on Windows, but it should work on other operating systems with minor modifications. For now, I will provide instructions for setting up the script on Windows that worked for me.
