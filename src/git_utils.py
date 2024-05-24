@@ -1,8 +1,9 @@
 import subprocess
+import os
 
 def is_in_git_repo():
     try:
-        subprocess.run(["git", "rev-parse", "--is-inside-work-tree"], check=True, capture_output=True, text=True)
+        subprocess.run(["git", "rev-parse", "--is-inside-work-tree"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, text=True)
         return True
     except subprocess.CalledProcessError:
         return False
@@ -29,7 +30,7 @@ def get_list_of_changed_files():
     return new_files
 
 def get_diff_string_for_file(file_path):
-    if subprocess.run(["git", "ls-files", "--error-unmatch", file_path], capture_output=True, text=True).returncode != 0:
+    if subprocess.run(["git", "ls-files", "--error-unmatch", file_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, text=True).returncode != 0:
         try:
             with open(file_path, 'r') as file:
                 content = file.read()
@@ -43,13 +44,16 @@ def get_diff_string():
     return subprocess.run(["git", "diff"], capture_output=True, text=True).stdout
 
 def stage_changes(file_path="."):
-    subprocess.run(["git", "add", file_path])
+    subprocess.run(["git", "add", file_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     print("Changes staged successfully.")
 
 def commit_changes(commit_message):
-    subprocess.run(["git", "commit", "-m", commit_message])
+    subprocess.run(["git", "commit", "-m", commit_message], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     print("Changes committed successfully.")
 
 def push_changes():
-    subprocess.run(["git", "push"])
+    subprocess.run(["git", "push"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     print("Changes pushed successfully.")
+
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')

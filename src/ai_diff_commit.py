@@ -9,6 +9,7 @@ from git_utils import (
     stage_changes,
     commit_changes,
     push_changes,
+    clear_console 
 )
 from prompt_utils import select_changed_files, confirm_commit_message, request_feedback, prompt_push_changes
 from colors import INFO, WARNING, ERROR, SUCCESS
@@ -43,6 +44,7 @@ def revise_commit_message_if_requested(diff_string, commit_message, auto_push=Fa
         return False
 
 def main():
+    clear_console()
     auto_push = '-p' in sys.argv or '--push' in sys.argv
     include_all = '-a' in sys.argv or '--all' in sys.argv
 
