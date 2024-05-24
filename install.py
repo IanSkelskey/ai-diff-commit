@@ -5,11 +5,14 @@ import sys
 from src.colors import INFO, WARNING, ERROR, SUCCESS
 from src.prompt_utils import get_api_key
 
+def clear_console():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 def install_dependencies():
     try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         print(f"{SUCCESS}Dependencies installed successfully.")
-    except subprocess.CalledProcessError as e:
+    except subprocess.CalledProcessError:
         print(f"{ERROR}Failed to install dependencies.")
         sys.exit(1)
 
@@ -66,6 +69,7 @@ python {directory}\\ai_diff_commit\\src\\ai_diff_commit.py %*
     print(f"{SUCCESS}Batch file created at {batch_file_path}")
 
 def main():
+    clear_console()  # Clear the console at the start
     source_dir = os.getcwd()
     scripts_dir = "C:\\Scripts"
     target_dir = "C:\\Scripts\\ai_diff_commit"
