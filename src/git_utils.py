@@ -1,5 +1,6 @@
 import subprocess
 import os
+import mimetypes
 
 def is_in_git_repo():
     try:
@@ -32,7 +33,15 @@ def get_list_of_changed_files():
 
     return new_files
 
+def is_binary_file(file_path):
+    # Guess the mimetype of the file
+    mime_type, _ = mimetypes.guess_type(file_path)
+    return mime_type is not None and mime_type.startswith('image')
+
 def get_diff_string_for_file(file_path):
+    if is_binary_file(file_path):
+        return f"Binary file detected: {file_path} - Skipping diff."
+
     if subprocess.run(["git", "ls-files", "--error-unmatch", file_path], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, text=True).returncode != 0:
         try:
             with open(file_path, 'r') as file:
@@ -40,8 +49,13 @@ def get_diff_string_for_file(file_path):
             return f"Untracked file: {file_path}\n{content}"
         except FileNotFoundError:
             return f"Untracked file: {file_path}\nFile not found."
+        except UnicodeDecodeError:
+            return f"Untracked file: {file_path}\nBinary file detected - Skipping diff."
     else:
-        return subprocess.run(["git", "diff", file_path], capture_output=True, text=True).stdout
+        try:
+            return subprocess.run(["git", "diff", file_path], capture_output=True, text=True).stdout
+        except UnicodeDecodeError:
+            return f"Tracked file: {file_path}\nBinary file detected - Skipping diff."
 
 def get_diff_string():
     return subprocess.run(["git", "diff"], capture_output=True, text=True).stdout
