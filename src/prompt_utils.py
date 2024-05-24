@@ -1,4 +1,5 @@
 from InquirerPy import prompt
+import textwrap
 
 def get_api_key():
     questions = [
@@ -72,3 +73,8 @@ def prompt_push_changes():
     ]
     answers = prompt(questions)
     return answers["push"]
+
+def wrap_text(text, width=120):
+	paragraphs = text.split("\n")
+	wrapped_paragraphs = [textwrap.fill(p, width) for p in paragraphs]
+	return "\n".join(wrapped_paragraphs)

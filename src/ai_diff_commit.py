@@ -12,7 +12,7 @@ from git_utils import (
     clear_console,
     get_current_branch_name
 )
-from prompt_utils import select_changed_files, confirm_commit_message, request_feedback, prompt_push_changes
+from prompt_utils import select_changed_files, confirm_commit_message, request_feedback, prompt_push_changes, wrap_text
 from colors import INFO, WARNING, ERROR, SUCCESS, GIT_INFO, AI_INFO, GENERATED
 from InquirerPy import prompt
 
@@ -47,22 +47,22 @@ def revise_commit_message_if_requested(diff_string, commit_message, auto_push=Fa
 def main():
     branch_name = get_current_branch_name()
     clear_console()
-    print(f"{GIT_INFO}Current branch: {branch_name}")
+    print(wrap_text(f"{GIT_INFO}Current branch: {branch_name}"))
     auto_push = '-p' in sys.argv or '--push' in sys.argv
     include_all = '-a' in sys.argv or '--all' in sys.argv
 
     if not is_in_git_repo():
-        print(f"{ERROR}Error: This program must be run inside a Git repository.")
+        print(wrap_text(f"{ERROR}Error: This program must be run inside a Git repository."))
         return
 
     if not has_git_changes():
-        print(f"{SUCCESS}No changes to commit. Your working directory is clean.")
+        print(wrap_text(f"{SUCCESS}No changes to commit. Your working directory is clean."))
         return
 
     if include_all:
         diff_string = get_diff_string()
         if not diff_string:
-            print(f"{ERROR}No changes detected in the repository.")
+            print(wrap_text(f"{ERROR}No changes detected in the repository."))
             return
     else:
         changed_files = [(line[0], line[2:].strip()) for line in get_list_of_changed_files()]
@@ -70,22 +70,21 @@ def main():
         selected_files = select_changed_files(changed_files)
         
         if not selected_files:
-            print(f"{ERROR}No files selected. Exiting.")
+            print(wrap_text(f"{ERROR}No files selected. Exiting."))
             return
         
         diff_string = "\n".join([get_diff_string_for_file(file) for file in selected_files])
         if not diff_string:
-            print(f"{ERROR}No changes detected in the selected files.")
+            print(wrap_text(f"{ERROR}No changes detected in the selected files."))
             return
 
     commit_message = analyze_diff_with_chat_gpt(diff_string)
     if not commit_message:
-        print(f"{ERROR}No commit message was generated.")
+        print(wrap_text(f"{ERROR}No commit message was generated."))
         return
 
     # Print the commit message separately with color formatting
-    print(f"{AI_INFO}Generated commit message:")
-    print(f"{GENERATED}{commit_message}")
+    print(wrap_text(f"{GENERATED}Generated commit message:\n{commit_message}\n"))
     
     if not confirm_and_commit(diff_string, commit_message, auto_push):
         return
@@ -96,7 +95,7 @@ def main():
         if prompt_push_changes():
             push_changes()
         else:
-            print(f"{WARNING}Changes not pushed. You can push changes later using 'git push'.")
+            print(wrap_text(f"{WARNING}Changes not pushed. You can push changes later using 'git push'."))
 
 if __name__ == "__main__":
     main()
