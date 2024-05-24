@@ -12,6 +12,9 @@ def has_git_changes():
     status_output = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True).stdout
     return len(status_output.strip()) > 0
 
+def get_current_branch_name():
+    return subprocess.run(["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True).stdout.strip()
+
 def get_list_of_changed_files():
     status_output = subprocess.run(["git", "status", "--porcelain"], capture_output=True, text=True).stdout
     changed_files = [line for line in status_output.strip().split('\n') if line]

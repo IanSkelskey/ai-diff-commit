@@ -4,29 +4,34 @@ from colors import INFO, ERROR
 
 # Determine the absolute path of the script's directory
 script_dir = os.path.dirname(os.path.abspath(__file__))
-system_prompt_path = os.path.join(script_dir, '..', 'lib', 'system_prompt.md')
+system_prompt_path = os.path.join(script_dir, "..", "lib", "system_prompt.md")
 
 client = OpenAI()
+
+MODEL = "gpt-4o"
 
 with open(system_prompt_path, "r") as file:
     SYSTEM_PROMPT = file.read()
 
+
 def _get_response(message: str):
     try:
         completion = client.chat.completions.create(
-            model="gpt-4o",
+            model=MODEL,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": message},
             ],
         )
-        print(f"{INFO}Model: {completion.model}")
+        print(f"{INFO}Language Model: {completion.model}")
         return completion.choices[0].message.content
     except Exception as e:
         print(f"{ERROR}An error occurred: \n{e}")
 
+
 def analyze_diff_with_chat_gpt(diff_string: str):
     return _get_response(diff_string).strip("`")
+
 
 def revise_commit_message(diff_string: str, commit_message: str, feedback: str):
     user_prompt = f"""
