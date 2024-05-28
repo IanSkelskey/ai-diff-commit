@@ -19,6 +19,7 @@ Automates the creation of standardized Git commit messages using [OpenAI's API](
 - **Internet Connection**: Requires an active internet connection to communicate with the OpenAI API.
 - **Always Adds All Changes**: Adds all changes in the repository to the commit, which may not be suitable for all scenarios.
 - **Requires a Git Repository**: Needs to be run in a Git repository to access the changes for generating commit messages.
+- **Windows Installation**: The installation script is currently designed for Windows systems.
 
 ## Dependencies
 
