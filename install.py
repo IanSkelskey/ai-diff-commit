@@ -69,7 +69,7 @@ python {directory}\\ai_diff_commit\\src\\ai_diff_commit.py %*
     print(f"{SUCCESS}Batch file created at {batch_file_path}")
 
 def main():
-    clear_console()  # Clear the console at the start
+    clear_console()
     source_dir = os.getcwd()
     scripts_dir = "C:\\Scripts"
     target_dir = "C:\\Scripts\\ai_diff_commit"
