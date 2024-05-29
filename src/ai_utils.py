@@ -8,7 +8,7 @@ system_prompt_path = os.path.join(script_dir, "..", "lib", "system_prompt.md")
 
 client = OpenAI()
 
-MODEL = "gpt-4"
+MODEL = "gpt-4o"
 
 def set_model(model_name: str):
     global MODEL
@@ -26,6 +26,7 @@ def _get_response(message: str):
                 {"role": "user", "content": message},
             ],
         )
+        print(f"{AI_INFO}Generating commit message...")
         print(f"{AI_INFO}Language Model: {completion.model}")
         return completion.choices[0].message.content
     except Exception as e:
