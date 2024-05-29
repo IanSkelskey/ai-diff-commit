@@ -23,15 +23,62 @@ from prompt_utils import (
 from colors import INFO, WARNING, ERROR, SUCCESS, GIT_INFO, GENERATED
 from InquirerPy import prompt
 
-def confirm_and_commit(diff_string, commit_message, selected_files):
-    if confirm_commit_message(commit_message):
-        stage_changes(selected_files)
-        commit_changes(commit_message)
-        return True
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="AI Diff Commit Script")
+    parser.add_argument('-p', '--push', action='store_true', help='Automatically push changes.')
+    parser.add_argument('-a', '--add', action='store_true', help='Automatically add all changes.')
+    parser.add_argument('-m', '--model', type=str, default='gpt-4o', help='Specify the OpenAI API language model.')
+    return parser.parse_args()
+
+
+def initialize_repository():
+    branch_name = get_current_branch_name()
+    clear_console()
+    print(wrap_text(f"{GIT_INFO}Current branch: {branch_name}"))
+    return branch_name
+
+
+def validate_repository():
+    if not is_in_git_repo():
+        print(wrap_text(f"{ERROR}Error: This program must be run inside a Git repository."))
+        sys.exit(1)
+
+
+def check_for_changes():
+    if not has_git_changes():
+        print(wrap_text(f"{SUCCESS}No changes to commit. Your working directory is clean."))
+        sys.exit(0)
+
+
+def get_diff_and_selected_files(include_all):
+    if include_all:
+        diff_string = get_diff_string()
+        if not diff_string:
+            print(wrap_text(f"{ERROR}No changes detected in the repository."))
+            sys.exit(1)
+        selected_files = ["."]
     else:
-        return revise_commit_message_if_requested(
-            diff_string, commit_message, selected_files
-        )
+        changed_files = [(line[0], line[2:].strip()) for line in get_list_of_changed_files()]
+        selected_files = select_changed_files(changed_files)
+        if not selected_files:
+            print(wrap_text(f"{ERROR}No files selected. Exiting."))
+            sys.exit(1)
+        diff_string = "\n".join([get_diff_string_for_file(file) for file in selected_files])
+        if not diff_string:
+            print(wrap_text(f"{ERROR}No changes detected in the selected files."))
+            sys.exit(1)
+    return diff_string, selected_files
+
+
+def generate_commit_message(diff_string):
+    commit_message = analyze_diff_with_chat_gpt(diff_string)
+    if not commit_message:
+        print(wrap_text(f"{ERROR}No commit message was generated."))
+        sys.exit(1)
+    print(wrap_text(f"{GENERATED}Generated commit message:\n{commit_message}\n"))
+    return commit_message
+
 
 def revise_commit_message_if_requested(diff_string, commit_message, selected_files):
     questions = [
@@ -45,95 +92,44 @@ def revise_commit_message_if_requested(diff_string, commit_message, selected_fil
     answers = prompt(questions)
     if answers["revise"]:
         feedback = request_feedback()
-        revised_commit_message = revise_commit_message(
-            diff_string, commit_message, feedback
-        )
-        print(
-            wrap_text(f"{GENERATED}Revised commit message:\n{revised_commit_message}\n")
-        )
+        revised_commit_message = revise_commit_message(diff_string, commit_message, feedback)
+        print(wrap_text(f"{GENERATED}Revised commit message:\n{revised_commit_message}\n"))
         return confirm_and_commit(diff_string, revised_commit_message, selected_files)
     else:
         print(f"{ERROR}Changes not committed.")
         return False
 
-def main():
-    parser = argparse.ArgumentParser(description="AI Diff Commit Script")
-    parser.add_argument('-p', '--push', action='store_true', help='Automatically push changes.')
-    parser.add_argument('-a', '--add', action='store_true', help='Automatically add all changes.')
-    parser.add_argument('-m', '--model', type=str, default='gpt-4o', help='Specify the OpenAI API language model.')
 
-    args = parser.parse_args()
-
-    set_model(args.model)
-
-    branch_name = get_current_branch_name()
-    clear_console()
-    print(wrap_text(f"{GIT_INFO}Current branch: {branch_name}"))
-    auto_push = args.push
-    include_all = args.add
-
-    if not is_in_git_repo():
-        print(
-            wrap_text(
-                f"{ERROR}Error: This program must be run inside a Git repository."
-            )
-        )
-        return
-
-    if not has_git_changes():
-        print(
-            wrap_text(
-                f"{SUCCESS}No changes to commit. Your working directory is clean."
-            )
-        )
-        return
-
-    if include_all:
-        diff_string = get_diff_string()
-        if not diff_string:
-            print(wrap_text(f"{ERROR}No changes detected in the repository."))
-            return
-        selected_files = ["."]
+def confirm_and_commit(diff_string, commit_message, selected_files):
+    if confirm_commit_message(commit_message):
+        stage_changes(selected_files)
+        commit_changes(commit_message)
+        return True
     else:
-        changed_files = [
-            (line[0], line[2:].strip()) for line in get_list_of_changed_files()
-        ]
+        return revise_commit_message_if_requested(diff_string, commit_message, selected_files)
 
-        selected_files = select_changed_files(changed_files)
 
-        if not selected_files:
-            print(wrap_text(f"{ERROR}No files selected. Exiting."))
-            return
-
-        diff_string = "\n".join(
-            [get_diff_string_for_file(file) for file in selected_files]
-        )
-        if not diff_string:
-            print(wrap_text(f"{ERROR}No changes detected in the selected files."))
-            return
-
-    commit_message = analyze_diff_with_chat_gpt(diff_string)
-    if not commit_message:
-        print(wrap_text(f"{ERROR}No commit message was generated."))
-        return
-
-    # Print the commit message separately with color formatting
-    print(wrap_text(f"{GENERATED}Generated commit message:\n{commit_message}\n"))
-
-    if not confirm_and_commit(diff_string, commit_message, selected_files):
-        return
-
-    if auto_push:
-        push_changes()
-    else:
-        if prompt_push_changes():
+def handle_commit_process(diff_string, selected_files, auto_push):
+    commit_message = generate_commit_message(diff_string)
+    if confirm_and_commit(diff_string, commit_message, selected_files):
+        if auto_push:
             push_changes()
         else:
-            print(
-                wrap_text(
-                    f"{WARNING}Changes not pushed. You can push changes later using 'git push'."
-                )
-            )
+            if prompt_push_changes():
+                push_changes()
+            else:
+                print(wrap_text(f"{WARNING}Changes not pushed. You can push changes later using 'git push'."))
+
+
+def main():
+    args = parse_arguments()
+    set_model(args.model)
+    initialize_repository()
+    validate_repository()
+    check_for_changes()
+    diff_string, selected_files = get_diff_and_selected_files(args.add)
+    handle_commit_process(diff_string, selected_files, args.push)
+
 
 if __name__ == "__main__":
     main()
