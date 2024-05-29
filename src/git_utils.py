@@ -62,7 +62,7 @@ def get_diff_string_for_file(file_path):
 
     if subprocess.run([GIT_COMMAND] + GIT_LS_FILES + [file_path], stdout=DEVNULL, stderr=DEVNULL, text=TEXT).returncode != 0:
         try:
-            with open(file_path, 'r') as file:
+            with open(file_path, 'r', encoding='utf-8') as file:
                 content = file.read()
             return f"Untracked file: {file_path}\n{content}"
         except FileNotFoundError:
@@ -71,12 +71,12 @@ def get_diff_string_for_file(file_path):
             return f"{ERROR}Untracked file: {file_path}\nBinary file detected - Skipping diff."
     else:
         try:
-            return subprocess.run([GIT_COMMAND] + GIT_DIFF + [file_path], capture_output=CAPTURE_OUTPUT, text=TEXT).stdout
+            return subprocess.run([GIT_COMMAND] + GIT_DIFF + [file_path], capture_output=CAPTURE_OUTPUT, text=TEXT, encoding='utf-8').stdout
         except UnicodeDecodeError:
             return f"{ERROR}Tracked file: {file_path}\nBinary file detected - Skipping diff."
 
 def get_diff_string():
-    return subprocess.run([GIT_COMMAND] + GIT_DIFF, capture_output=CAPTURE_OUTPUT, text=TEXT).stdout
+    return subprocess.run([GIT_COMMAND] + GIT_DIFF, capture_output=CAPTURE_OUTPUT, text=TEXT, encoding='utf-8').stdout
 
 def stage_changes(selected_files=["."]):
     for file_path in selected_files:
