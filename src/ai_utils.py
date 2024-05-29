@@ -1,4 +1,5 @@
 import os
+import time
 from openai import OpenAI
 from colors import AI_INFO, ERROR
 
@@ -17,20 +18,34 @@ def set_model(model_name: str):
 with open(system_prompt_path, "r") as file:
     SYSTEM_PROMPT = file.read()
 
+
 def _get_response(message: str):
-    try:
-        completion = client.chat.completions.create(
-            model=MODEL,
-            messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
-                {"role": "user", "content": message},
-            ],
-        )
-        print(f"{AI_INFO}Generating commit message...")
-        print(f"{AI_INFO}Language Model: {completion.model}")
-        return completion.choices[0].message.content
-    except Exception as e:
-        print(f"{ERROR}An error occurred: \n{e}")
+    max_retries = 5
+    backoff_factor = 2
+    retry_count = 0
+
+    while retry_count < max_retries:
+        try:
+            completion = client.chat.completions.create(
+                model=MODEL,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": message},
+                ],
+            )
+            print(f"{AI_INFO}Generating commit message...")
+            print(f"{AI_INFO}Language Model: {completion.model}")
+            return completion.choices[0].message.content
+        except Exception as e:
+            if "429" in str(e):
+                retry_count += 1
+                wait_time = backoff_factor ** retry_count
+                print(f"{ERROR}Rate limit error. Retrying in {wait_time} seconds...")
+                time.sleep(wait_time)
+            else:
+                print(f"{ERROR}An error occurred: \n{e}")
+                break
+    return None
 
 def analyze_diff_with_chat_gpt(diff_string: str):
     return _get_response(diff_string).strip("`")
