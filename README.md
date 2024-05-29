@@ -51,6 +51,8 @@ Once you have set up the script using the installation instructions, you can use
 ### Flags
 
 - `-a`, `--all`: Add all changes in the repository to the commit. By default, only the modified files are added.
+- `-h`, `--help`: Display help information for the script.
+- `-m`, `--model`: Specify the OpenAI API language model to use for generating commit messages.
 - `-p`, `--push`: Automatically push the changes to the remote repository after committing.
 
 For example, to generate a commit message based on all changes in the repository and push the changes to the remote repository, you can use the following command:

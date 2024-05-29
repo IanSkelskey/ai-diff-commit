@@ -8,11 +8,14 @@ system_prompt_path = os.path.join(script_dir, "..", "lib", "system_prompt.md")
 
 client = OpenAI()
 
-MODEL = "gpt-4o"
+MODEL = "gpt-4"
+
+def set_model(model_name: str):
+    global MODEL
+    MODEL = model_name
 
 with open(system_prompt_path, "r") as file:
     SYSTEM_PROMPT = file.read()
-
 
 def _get_response(message: str):
     try:
@@ -28,10 +31,8 @@ def _get_response(message: str):
     except Exception as e:
         print(f"{ERROR}An error occurred: \n{e}")
 
-
 def analyze_diff_with_chat_gpt(diff_string: str):
     return _get_response(diff_string).strip("`")
-
 
 def revise_commit_message(diff_string: str, commit_message: str, feedback: str):
     user_prompt = f"""

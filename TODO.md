@@ -18,6 +18,7 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
   - [ ] `-h` or `--help` flag to display help information for `ai_diff_commit`.
 - [ ] Add option to select all files within a directory.
 - [ ] If the remote branch does not exist, create it.
+  - i.e. set upstream to the remote branch. maybe just pass the actual git message from this to the user.
 - [ ] Add optional organization instructions.
   - [ ] Project specific scope definitions and descriptions. e.g. `(backend)`: for backend changes, `(frontend)`: for frontend changes, etc.
   - [ ] Any organization-specific instructions.

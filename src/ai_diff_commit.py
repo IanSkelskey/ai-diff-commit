@@ -1,5 +1,6 @@
 import sys
-from ai_utils import analyze_diff_with_chat_gpt, revise_commit_message
+import argparse
+from ai_utils import analyze_diff_with_chat_gpt, revise_commit_message, set_model
 from git_utils import (
     is_in_git_repo,
     has_git_changes,
@@ -22,7 +23,6 @@ from prompt_utils import (
 from colors import INFO, WARNING, ERROR, SUCCESS, GIT_INFO, GENERATED
 from InquirerPy import prompt
 
-
 def confirm_and_commit(diff_string, commit_message, selected_files):
     if confirm_commit_message(commit_message):
         stage_changes(selected_files)
@@ -32,7 +32,6 @@ def confirm_and_commit(diff_string, commit_message, selected_files):
         return revise_commit_message_if_requested(
             diff_string, commit_message, selected_files
         )
-
 
 def revise_commit_message_if_requested(diff_string, commit_message, selected_files):
     questions = [
@@ -58,11 +57,20 @@ def revise_commit_message_if_requested(diff_string, commit_message, selected_fil
         return False
 
 def main():
+    parser = argparse.ArgumentParser(description="AI Diff Commit Script")
+    parser.add_argument('-p', '--push', action='store_true', help='Automatically push changes.')
+    parser.add_argument('-a', '--add', action='store_true', help='Automatically add all changes.')
+    parser.add_argument('-m', '--model', type=str, default='gpt-4o', help='Specify the OpenAI API language model.')
+
+    args = parser.parse_args()
+
+    set_model(args.model)
+
     branch_name = get_current_branch_name()
     clear_console()
     print(wrap_text(f"{GIT_INFO}Current branch: {branch_name}"))
-    auto_push = "-p" in sys.argv or "--push" in sys.argv
-    include_all = "-a" in sys.argv or "--all" in sys.argv
+    auto_push = args.push
+    include_all = args.add
 
     if not is_in_git_repo():
         print(
@@ -126,7 +134,6 @@ def main():
                     f"{WARNING}Changes not pushed. You can push changes later using 'git push'."
                 )
             )
-
 
 if __name__ == "__main__":
     main()
