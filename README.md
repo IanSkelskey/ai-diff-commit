@@ -20,6 +20,7 @@ Automates the creation of standardized Git commit messages using [OpenAI's API](
 - **Always Adds All Changes**: Adds all changes in the repository to the commit, which may not be suitable for all scenarios.
 - **Requires a Git Repository**: Needs to be run in a Git repository to access the changes for generating commit messages.
 - **Windows Installation**: The installation script is currently designed for Windows systems.
+- **Python Version**: Requires Python 3 or higher to run the script.
 
 ## Dependencies
 
@@ -27,7 +28,9 @@ Automates the creation of standardized Git commit messages using [OpenAI's API](
 - [**OpenAI**](https://pypi.org/project/openai/): For interacting with the OpenAI API.
 - [**InquirerPy**](https://pypi.org/project/InquirerPy/): For interactive command-line user interfaces.
 
-## Installation Instructions (Windows)
+## Installation Instructions
+
+### <img src="https://img.icons8.com/color/48/000000/windows-10.png" width="16"/> Windows
 
 I have only tested this on Windows, but it should work on other operating systems with minor modifications. For now, I will provide instructions for setting up the script on Windows that worked for me.
 
@@ -39,12 +42,30 @@ I have only tested this on Windows, but it should work on other operating system
    This script will:
    - Install the required dependencies.
    - Prompt you to enter your OpenAI API key and set it as an environment variable.
-   - Move the repository contents to `C:\Scripts\ai_diff_commit`.
-   - Add the `C:\Scripts` directory to your system's PATH environment variable.
-   - Create a `ai_diff_commit.bat` file in the `C:\Scripts` directory to run the script from any location.
+   - Move the repository contents to `C:\\Scripts\\ai_diff_commit`.
+   - Add the `C:\\Scripts` directory to your system's PATH environment variable.
+   - Create a `ai_diff_commit.bat` file in the `C:\\Scripts` directory to run the script from any location.
 
+### <img src="https://img.icons8.com/color/48/000000/mac-os.png" width="16"/> MacOS
 
-## Usage Instructions (Windows)
+To set up the script on macOS, follow these steps:
+
+1. Clone the repository and navigate to the project directory.
+2. Run the installation script using the following command:
+    ```bash
+    python3 install.py
+    ```
+   This script will:
+   - Install the required dependencies.
+   - Prompt you to enter your OpenAI API key and set it as an environment variable.
+   - Move the repository contents to `~/Scripts/ai_diff_commit`.
+   - Add the `~/Scripts` directory to your system's PATH environment variable.
+   - Create a `ai_diff_commit.sh` file in the `~/Scripts` directory to run the script from any location.
+   - Automatically source the appropriate shell configuration file to apply changes immediately if using zsh.
+
+> **Note:** If the command `ai_diff_commit` is still not found, please restart your terminal or run `source ~/.zshrc` or `source ~/.bash_profile` manually.
+
+## Usage Instructions
 
 Once you have set up the script using the installation instructions, you can use the `ai_diff_commit` command to generate commit messages based on the changes in your repository.
 

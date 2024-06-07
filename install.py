@@ -5,16 +5,16 @@ import sys
 
 # Simple color print functions without dependencies
 def print_info(message):
-    print(f"\033[96m{message}\033[0m")
+    print("\033[96m{}\033[0m".format(message))
 
 def print_warning(message):
-    print(f"\033[93m{message}\033[0m")
+    print("\033[93m{}\033[0m".format(message))
 
 def print_error(message):
-    print(f"\033[91m{message}\033[0m")
+    print("\033[91m{}\033[0m".format(message))
 
 def print_success(message):
-    print(f"\033[92m{message}\033[0m")
+    print("\033[92m{}\033[0m".format(message))
 
 def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -24,27 +24,15 @@ def install_dependencies():
         subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
         print_success("Dependencies installed successfully.")
     except subprocess.CalledProcessError as e:
-        print_error(f"Failed to install dependencies. Error: {e}")
+        print_error("Failed to install dependencies. Error: {}".format(e))
         sys.exit(1)
 
-def set_environment_variable_windows(key, value):
-    existing_value = os.environ.get(key)
-    if existing_value:
-        print_warning(f"Environment variable {key} already exists with value: {existing_value}")
-        return
-    os.system(f'setx {key} "{value}"')
-    print_success(f"Environment variable {key} set to: {value}")
-
-def set_environment_variable_mac(key, value):
-    existing_value = os.environ.get(key)
-    if existing_value:
-        print_warning(f"Environment variable {key} already exists with value: {existing_value}")
-        return
+def set_environment_variable(key, value):
     os.environ[key] = value
-    with open(os.path.expanduser("~/.bash_profile"), "a") as bash_profile:
-        bash_profile.write(f'\nexport {key}="{value}"\n')
-    os.system('source ~/.bash_profile')
-    print_success(f"Environment variable {key} set to: {value}")
+    shell_config = os.path.expanduser("~/.zshrc" if os.environ.get("SHELL", "").endswith("zsh") else "~/.bash_profile")
+    with open(shell_config, "a") as file:
+        file.write(f"\nexport {key}={value}\n")
+    print_success("Environment variable {} set to: {}".format(key, value))
 
 def on_rm_error(func, path, exc_info):
     import stat
@@ -56,7 +44,7 @@ def on_rm_error(func, path, exc_info):
 
 def move_repository_contents(source_dir, target_dir):
     if os.path.exists(target_dir):
-        print_warning(f"Removing existing directory at {target_dir}")
+        print_warning("Removing existing directory at {}".format(target_dir))
         shutil.rmtree(target_dir, onerror=on_rm_error)
     os.makedirs(target_dir)
     for item in os.listdir(source_dir):
@@ -66,54 +54,47 @@ def move_repository_contents(source_dir, target_dir):
             shutil.copytree(s, d, dirs_exist_ok=True)
         else:
             shutil.copy2(s, d)
-    print_success(f"Repository contents moved to {target_dir}")
+    print_success("Repository contents moved to {}".format(target_dir))
 
-def add_to_path_windows(directory):
-    path = os.environ.get("PATH", "")
-    if directory not in path:
-        os.system(f'setx PATH "%PATH%;{directory}"')
-        print_success(f"Added {directory} to system PATH.")
+def add_to_path(directory):
+    shell_config = os.path.expanduser("~/.zshrc" if os.environ.get("SHELL", "").endswith("zsh") else "~/.bash_profile")
+    with open(shell_config, "a") as file:
+        file.write(f'\nexport PATH="$PATH:{directory}"\n')
+    print_success("Added {} to system PATH.".format(directory))
+
+def create_script_file(directory):
+    script_content = "#!/bin/bash\npython3 {}/ai_diff_commit/src/ai_diff_commit.py $*\n".format(directory)
+    script_file_path = os.path.join(directory, "ai_diff_commit.sh")
+    with open(script_file_path, "w") as script_file:
+        script_file.write(script_content)
+    os.chmod(script_file_path, 0o755)
+    print_success("Script file created at {}".format(script_file_path))
+
+def create_alias(scripts_dir):
+    shell_config = os.path.expanduser("~/.zshrc" if os.environ.get("SHELL", "").endswith("zsh") else "~/.bash_profile")
+    alias_command = f"alias ai_diff_commit='{scripts_dir}/ai_diff_commit.sh'\n"
+    with open(shell_config, "a") as file:
+        file.write(alias_command)
+    print_success("Alias for ai_diff_commit added to {}".format(shell_config))
+
+def source_shell_config():
+    shell = os.environ.get("SHELL", "")
+    shell_config = os.path.expanduser("~/.zshrc" if shell.endswith("zsh") else "~/.bash_profile")
+    if shell.endswith("zsh"):
+        try:
+            subprocess.check_call(["zsh", "-c", f"source {shell_config}"])
+            print_success(f"Sourced {shell_config} to apply changes.")
+        except subprocess.CalledProcessError:
+            print_warning(f"Failed to source {shell_config}. Please run 'source {shell_config}' manually.")
     else:
-        print_warning(f"{directory} is already in the system PATH.")
-
-def add_to_path_mac(directory):
-    path = os.environ.get("PATH", "")
-    if directory not in path:
-        with open(os.path.expanduser("~/.bash_profile"), "a") as bash_profile:
-            bash_profile.write(f'\nexport PATH="$PATH:{directory}"\n')
-        os.system('source ~/.bash_profile')
-        print_success(f"Added {directory} to system PATH.")
-    else:
-        print_warning(f"{directory} is already in the system PATH.")
-
-def create_batch_file_windows(directory):
-    batch_content = f"""@echo off
-python {directory}\\\\ai_diff_commit\\\\src\\\\ai_diff_commit.py %*
-"""
-    batch_file_path = os.path.join(directory, "ai_diff_commit.bat")
-    with open(batch_file_path, "w") as batch_file:
-        batch_file.write(batch_content)
-    print_success(f"Batch file created at {batch_file_path}")
-
-def create_batch_file_mac(directory):
-    batch_content = f"""#!/bin/bash
-python3 {directory}/ai_diff_commit/src/ai_diff_commit.py "$@"
-"""
-    batch_file_path = os.path.join(directory, "ai_diff_commit.sh")
-    with open(batch_file_path, "w") as batch_file:
-        batch_file.write(batch_content)
-    os.chmod(batch_file_path, 0o755)
-    print_success(f"Script file created at {batch_file_path}")
+        print_warning(f"Automatic sourcing is not supported for the current shell ({shell}). Please run 'source {shell_config}' manually.")
 
 def main():
     clear_console()
     source_dir = os.getcwd()
-    if os.name == 'nt':
-        scripts_dir = "C:\\Scripts"
-        target_dir = "C:\\Scripts\\ai_diff_commit"
-    else:
-        scripts_dir = os.path.expanduser("~/Scripts")
-        target_dir = os.path.join(scripts_dir, "ai_diff_commit")
+    home_dir = os.path.expanduser("~")
+    scripts_dir = os.path.join(home_dir, "Scripts")
+    target_dir = os.path.join(scripts_dir, "ai_diff_commit")
 
     print_info("Installing dependencies...")
     install_dependencies()
@@ -121,10 +102,7 @@ def main():
     if not os.environ.get("OPENAI_API_KEY"):
         api_key = input("Please enter your OpenAI API key: ")
         print_info("Setting environment variable...")
-        if os.name == 'nt':
-            set_environment_variable_windows("OPENAI_API_KEY", api_key)
-        else:
-            set_environment_variable_mac("OPENAI_API_KEY", api_key)
+        set_environment_variable("OPENAI_API_KEY", api_key)
     else:
         print_warning("Environment variable OPENAI_API_KEY already exists.")
 
@@ -132,18 +110,18 @@ def main():
     move_repository_contents(source_dir, target_dir)
 
     print_info("Adding to system PATH...")
-    if os.name == 'nt':
-        add_to_path_windows(scripts_dir)
-    else:
-        add_to_path_mac(scripts_dir)
+    add_to_path(scripts_dir)
 
     print_info("Creating script file...")
-    if os.name == 'nt':
-        create_batch_file_windows(scripts_dir)
-    else:
-        create_batch_file_mac(scripts_dir)
+    create_script_file(scripts_dir)
 
-    print_success("Installation completed successfully.")
+    print_info("Creating alias for the command...")
+    create_alias(scripts_dir)
+
+    print_info("Sourcing shell configuration file to apply changes...")
+    source_shell_config()
+
+    print_success("Installation completed successfully. If the command 'ai_diff_commit' is still not found, please restart your terminal or run 'source ~/.zshrc' or 'source ~/.bash_profile' manually.")
 
 if __name__ == "__main__":
     main()
