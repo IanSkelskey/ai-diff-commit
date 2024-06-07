@@ -61,6 +61,12 @@ For example, to generate a commit message based on all changes in the repository
 ai_diff_commit -a -p
 ```
 
+## File Selection
+
+The script will prompt you to select the files you want to include in the commit. You can use the arrow keys to navigate the list and the spacebar to select or deselect files. Press `Enter` to proceed with the selected files.
+
+![File Selection Screenshot](lib/screenshots/file_selection.png)
+
 ## Example Output
 
 ![Sample Output](lib/screenshots/output.png)
