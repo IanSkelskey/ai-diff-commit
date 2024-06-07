@@ -1,7 +1,7 @@
 import subprocess
 import os
 import mimetypes
-from colors import INFO, WARNING, ERROR, SUCCESS, GIT_INFO
+from colors import INFO, ERROR, SUCCESS
 
 # Constants for Git commands and options
 GIT_COMMAND = "git"
