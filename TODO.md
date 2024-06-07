@@ -6,6 +6,8 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 
 - [ ] Allow manual editing of commit messages before committing the changes.
 - [ ] Add support for Linux and macOS.
+  - [ ] Linux
+  - [x] macOS
 - [ ] Add documentation for the script.
   - [x] Write a README.md file.
   - [ ] Generate documentation using Sphinx or similar tool.
