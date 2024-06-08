@@ -3,7 +3,11 @@ name: Deploy Sphinx Docs to GitHub Pages
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to deploy from
+      - main
+  pull_request:
+    types: [closed]
+    branches:
+      - main
 
 jobs:
   build:
