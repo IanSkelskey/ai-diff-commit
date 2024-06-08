@@ -14,15 +14,20 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
   - [ ] Deploy documentation to a website. (Probably GitHub Pages)
   - [x] `-h` or `--help` flag to display help information for `ai_diff_commit`.
 - [ ] Add option to select all files within a directory.
+- [ ] Option to generate a short commit message without a description. (One-liner)
 - [ ] If the remote branch does not exist, create it.
   - i.e. set upstream to the remote branch. maybe just pass the actual git message from this to the user.
 - [ ] Add optional organization instructions.
   - [ ] Project specific scope definitions and descriptions. e.g. `(backend)`: for backend changes, `(frontend)`: for frontend changes, etc.
   - [ ] Any organization-specific instructions.
 - [ ] Add an easy way to quit the script.
+- [ ] Come up with a better name for the script.
+  - [ ] `ai_diff_commit` is too long.
+- [ ] OpenAI Assistant for generating commit messages.
 
 ## Completed Features:
 
+- [x] Create a logo for the script.
 - [x] Add terminal arguments for customization.
   - [x] Add argument for specifying the openai API language model.
   - [x] Add argument for automatically pushing changes.
