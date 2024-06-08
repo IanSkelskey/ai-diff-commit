@@ -8,11 +8,6 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 - [ ] Add support for Linux and macOS.
   - [ ] Linux
   - [x] macOS
-- [ ] Add documentation for the script.
-  - [x] Write a README.md file.
-  - [ ] Generate documentation using Sphinx or similar tool.
-  - [ ] Deploy documentation to a website. (Probably GitHub Pages)
-  - [x] `-h` or `--help` flag to display help information for `ai_diff_commit`.
 - [ ] Add option to select all files within a directory.
 - [ ] Option to generate a short commit message without a description. (One-liner)
 - [ ] If the remote branch does not exist, create it.
@@ -25,6 +20,9 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
   - `ai_diff_commit` is too long.
     - comgen
 - [ ] OpenAI Assistant for generating commit messages.
+- [ ] Make a way to update the OpenAI API key.
+  - [ ] If the key is invalid, prompt the user to update it.
+  - [ ] Add a flag to update/remove the key.
 - [ ] Decide on a distribution method for the script.
   - PyPI package.
   - Homebrew formula.
@@ -35,10 +33,15 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
   - Docker image.
   - GitHub release.
   - Manual installation.
-  - Other package manag
+  - Other package manager
 
 ## Completed Features:
 
+- [x] Add documentation for the script.
+  - [x] Write a README.md file.
+  - [x] Generate documentation using Sphinx or similar tool.
+  - [x] Deploy documentation to a website. (Probably GitHub Pages)
+  - [x] `-h` or `--help` flag to display help information for `ai_diff_commit`.
 - [x] Create a logo for the script.
 - [x] Add terminal arguments for customization.
   - [x] Add argument for specifying the openai API language model.
