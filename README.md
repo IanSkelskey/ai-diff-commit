@@ -87,3 +87,7 @@ The script will prompt you to select the files you want to include in the commit
 ## Example Output
 
 ![Sample Output](lib/screenshots/output.png)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
