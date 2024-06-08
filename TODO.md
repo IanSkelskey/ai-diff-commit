@@ -24,6 +24,17 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 - [ ] Come up with a better name for the script.
   - [ ] `ai_diff_commit` is too long.
 - [ ] OpenAI Assistant for generating commit messages.
+- [ ] Decide on a distribution method for the script.
+  - PyPI package.
+  - Homebrew formula.
+  - AUR package.
+  - Snap package.
+  - Chocolatey package.
+  - npm package.
+  - Docker image.
+  - GitHub release.
+  - Manual installation.
+  - Other package manag
 
 ## Completed Features:
 
