@@ -1,3 +1,15 @@
+"""
+AI Utilities
+
+This module provides utility functions for interacting with the OpenAI API
+to generate and revise commit messages based on diffs.
+
+Functions:
+    set_model: Sets the model for the OpenAI API.
+    analyze_diff_with_chat_gpt: Analyzes the diff and generates a commit message.
+    revise_commit_message: Revises the commit message based on user feedback.
+"""
+
 import os
 import time
 from openai import OpenAI
@@ -12,14 +24,15 @@ client = OpenAI()
 MODEL = "gpt-4o"
 
 def set_model(model_name: str):
+    """Sets the model for the OpenAI API."""
     global MODEL
     MODEL = model_name
 
 with open(system_prompt_path, "r") as file:
     SYSTEM_PROMPT = file.read()
 
-
 def _get_response(message: str):
+    """Gets the response from the OpenAI API."""
     max_retries = 5
     backoff_factor = 2
     retry_count = 0
@@ -48,9 +61,11 @@ def _get_response(message: str):
     return None
 
 def analyze_diff_with_chat_gpt(diff_string: str):
+    """Analyzes the diff and generates a commit message."""
     return _get_response(diff_string).strip("`")
 
 def revise_commit_message(diff_string: str, commit_message: str, feedback: str):
+    """Revises the commit message based on user feedback."""
     user_prompt = f"""
     You have generated the following commit message:
     
