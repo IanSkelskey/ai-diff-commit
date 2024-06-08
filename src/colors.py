@@ -1,3 +1,19 @@
+"""
+Color Constants
+
+This module defines color constants for use in terminal output.
+
+Attributes:
+    INFO: Information color.
+    GIT_INFO: Git information color.
+    AI_INFO: AI information color.
+    GENERATED: Generated message color.
+    WARNING: Warning message color.
+    ERROR: Error message color.
+    SUCCESS: Success message color.
+    RESET: Reset color.
+"""
+
 from colorama import init, Fore, Style
 
 # Initialize colorama
