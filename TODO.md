@@ -22,7 +22,8 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
   - [ ] Any organization-specific instructions.
 - [ ] Add an easy way to quit the script.
 - [ ] Come up with a better name for the script.
-  - [ ] `ai_diff_commit` is too long.
+  - `ai_diff_commit` is too long.
+    - comgen
 - [ ] OpenAI Assistant for generating commit messages.
 - [ ] Decide on a distribution method for the script.
   - PyPI package.
