@@ -37,6 +37,9 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
   - Other package manager
 - [ ] Release the script to the public as an open-source project.
 - [ ] Accept donations for the project.
+- [ ] Add contribution guidelines.
+- [ ] Add branch protection rules.
+- [ ] Create dev branch.
 
 ## Completed Features:
 
