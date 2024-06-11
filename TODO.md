@@ -40,6 +40,8 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 - [ ] Add contribution guidelines.
 - [ ] Add branch protection rules.
 - [ ] Create dev branch.
+- [ ] Spaces in file names throw errors.
+- [ ] Sometimes there are trailing backticks in the commit message.
 
 ## Completed Features:
 
