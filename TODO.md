@@ -42,6 +42,11 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 - [ ] Create dev branch.
 - [ ] Spaces in file names throw errors.
 - [ ] Sometimes there are trailing backticks in the commit message.
+- [ ] Reference [AICommits](https://github.com/Nutlope/aicommits) for inspiration.
+  - Study the release strategy.
+  - Study the documentation.
+  - Compare the features.
+- [ ] Meet with Nate about collaboration.
 
 ## Completed Features:
 
