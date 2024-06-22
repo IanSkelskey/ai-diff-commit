@@ -39,17 +39,17 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 - [ ] Accept donations for the project.
 - [ ] Add contribution guidelines.
 - [ ] Add branch protection rules.
-- [ ] Create dev branch.
 - [ ] Spaces in file names throw errors.
 - [ ] Sometimes there are trailing backticks in the commit message.
 - [ ] Reference [AICommits](https://github.com/Nutlope/aicommits) for inspiration.
   - Study the release strategy.
   - Study the documentation.
   - Compare the features.
-- [ ] Meet with Nate about collaboration.
 
 ## Completed Features:
 
+- [x] Create dev branch.
+- [x] Meet with Nate about collaboration.
 - [x] Add documentation for the script.
   - [x] Write a README.md file.
   - [x] Generate documentation using Sphinx or similar tool.
