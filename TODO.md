@@ -5,7 +5,8 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 ## Upcoming Features:
 
 - [ ] Allow manual editing of commit messages before committing the changes.
-- [ ] Test branch protection rules. 
+- [ ] If push is blocked due to branch protection rules, notify the user.
+  - Currently, the script just fails silently and displays a success message which is misleading.
 - [ ] Add support for Linux and macOS.
   - [ ] Linux
   - [x] macOS
@@ -49,6 +50,7 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 
 ## Completed Features:
 
+- [x] Test branch protection rules.
 - [x] Create dev branch.
 - [x] Meet with Nate about collaboration.
 - [x] Add documentation for the script.
