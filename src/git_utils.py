@@ -81,13 +81,14 @@ def is_binary_file(file_path):
     return mime_type is not None and mime_type.startswith('image')
 
 def get_diff_string_for_file(file_path):
-    """Gets the diff string for a specific file."""
+    file_path = f'"{file_path}"'  # Ensure the file path is quoted
+
     if is_binary_file(file_path):
         return f"Binary file detected: {file_path} - Skipping diff."
 
     if subprocess.run([GIT_COMMAND] + GIT_LS_FILES + [file_path], stdout=DEVNULL, stderr=DEVNULL, text=TEXT).returncode != 0:
         try:
-            with open(file_path, 'r', encoding='utf-8') as file:
+            with open(file_path.strip('"'), 'r', encoding='utf-8') as file:  # Remove quotes when opening the file
                 content = file.read()
             return f"Untracked file: {file_path}\n{content}"
         except FileNotFoundError:
