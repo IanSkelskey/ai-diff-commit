@@ -5,7 +5,7 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 ## Upcoming Features:
 
 - [ ] Allow manual editing of commit messages before committing the changes.
-- [ ] Test branch protection rules.
+- [ ] Test branch protection rules. 
 - [ ] Add support for Linux and macOS.
   - [ ] Linux
   - [x] macOS
