@@ -14,6 +14,7 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 - [ ] Option to generate a short commit message without a description. (One-liner)
 - [ ] If the remote branch does not exist, create it.
   - i.e. set upstream to the remote branch. maybe just pass the actual git message from this to the user.
+  - Currently, the script fails silently if the remote branch does not exist and displays a success message which is misleading.
 - [ ] Add optional organization instructions.
   - [ ] Project specific scope definitions and descriptions. e.g. `(backend)`: for backend changes, `(frontend)`: for frontend changes, etc.
   - [ ] Any organization-specific instructions.
