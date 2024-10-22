@@ -17,7 +17,7 @@ from colors import AI_INFO, ERROR
 
 # Determine the absolute path of the script's directory
 script_dir = os.path.dirname(os.path.abspath(__file__))
-system_prompt_path = os.path.join(script_dir, "..", "lib", "system_prompt.md")
+system_prompt_path = os.path.join(script_dir, "..", "lib", "prompts", "conventional_long.md")
 
 client = OpenAI()
 
