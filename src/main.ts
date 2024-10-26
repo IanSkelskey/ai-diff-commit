@@ -1,9 +1,8 @@
 import { setModel, analyzeDiffWithChatGpt } from "./utils/aiUtils";
-import { isInGitRepo, hasGitChanges, getCurrentBranchName } from "./utils/gitUtils";
+import { isInGitRepo, hasGitChanges, getCurrentBranchName, getDiff, commitWithMessage } from "./utils/gitUtils";
 import { confirmCommitMessage } from "./utils/promptUtils";
 import { Command } from "commander";
 import chalk from "chalk";
-import { execSync } from "child_process";
 
 const program = new Command();
 
@@ -31,12 +30,11 @@ async function main() {
   const branch = getCurrentBranchName();
   console.log(chalk.blue(`Current branch: ${branch}`));
 
-  // Assuming this function is for getting a string representation of changes
-  const diffString = execSync("git diff").toString();
+  const diffString = getDiff();
   const commitMessage = await analyzeDiffWithChatGpt(diffString);
 
   if (commitMessage && await confirmCommitMessage(commitMessage)) {
-    execSync(`git commit -am "${sanitizeCommitMessage(commitMessage)}"`);
+    commitWithMessage(sanitizeCommitMessage(commitMessage));
     console.log(chalk.green("Changes committed successfully."));
   } else {
     console.log(chalk.yellow("Commit aborted."));
