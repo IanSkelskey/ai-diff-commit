@@ -36,11 +36,15 @@ async function main() {
   const commitMessage = await analyzeDiffWithChatGpt(diffString);
 
   if (commitMessage && await confirmCommitMessage(commitMessage)) {
-    execSync(`git commit -am "${commitMessage}"`);
+    execSync(`git commit -am "${sanitizeCommitMessage(commitMessage)}"`);
     console.log(chalk.green("Changes committed successfully."));
   } else {
     console.log(chalk.yellow("Commit aborted."));
   }
+}
+
+function sanitizeCommitMessage(commitMessage: string): string {
+  return commitMessage.replace(/"/g, '\\"');
 }
 
 main().catch((err) => {

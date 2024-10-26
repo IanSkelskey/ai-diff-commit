@@ -1,6 +1,6 @@
 <img src="lib/logo.svg" width="100">
 
-# AI Diff Commit
+# AI Diff Commit 2.0
 
 Automates the creation of standardized Git commit messages using [OpenAI's API](https://platform.openai.com/docs/), ensuring adherence to the [Conventional Commits specification](https://www.conventionalcommits.org/en/v1.0.0/) for clear and meaningful commit history.
 
