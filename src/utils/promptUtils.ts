@@ -1,7 +1,6 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
 
-// Create a map of chalk colors for different types of messages
 const colors: Record<string, (message: string) => string> = {
 	"info": chalk.blue,
 	"success": chalk.green,
@@ -16,6 +15,15 @@ export async function confirmCommitMessage(commitMessage: string): Promise<boole
 		message: `Do you want to commit with the following message?\n${commitMessage}`
 	});
 	return answer.commit;
+}
+
+export function showHelpMenu(): void {
+	print("info", "Usage: ai-commit [options]");
+	console.log("\nOptions:");
+	console.log("  -m, --model <model>  Specify OpenAI model (default: gpt-4o)");
+	console.log("  -p, --push           Automatically push changes (default: false)");
+	console.log("  -a, --add            Automatically add all changes (default: false)");
+	console.log("  -h, --help           Display help for command");
 }
 
 export function print(type: string, message: string): void {
