@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { setModel, createTextGeneration } from './utils/llm';
 import {
 	isInGitRepo,
