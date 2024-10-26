@@ -1,8 +1,7 @@
 import { setModel, analyzeDiffWithChatGpt } from "./utils/aiUtils";
 import { isInGitRepo, hasGitChanges, getCurrentBranchName, getDiff, commitWithMessage } from "./utils/gitUtils";
-import { confirmCommitMessage } from "./utils/promptUtils";
+import { confirmCommitMessage, print } from "./utils/promptUtils";
 import { Command } from "commander";
-import chalk from "chalk";
 
 const program = new Command();
 
@@ -18,26 +17,26 @@ async function main() {
   setModel(options.model);
 
   if (!isInGitRepo()) {
-    console.error(chalk.red("Error: This program must be run inside a Git repository."));
+    print("error", "Not in a git repository.");
     process.exit(1);
   }
 
   if (!hasGitChanges()) {
-    console.log(chalk.green("No changes to commit. Your working directory is clean."));
+    print("warning", "No changes detected.");
     return;
   }
 
   const branch = getCurrentBranchName();
-  console.log(chalk.blue(`Current branch: ${branch}`));
+  print("info", `Current branch: ${branch}`);
 
   const diffString = getDiff();
   const commitMessage = await analyzeDiffWithChatGpt(diffString);
 
   if (commitMessage && await confirmCommitMessage(commitMessage)) {
     commitWithMessage(sanitizeCommitMessage(commitMessage));
-    console.log(chalk.green("Changes committed successfully."));
+    print("success", "Commit successful.");
   } else {
-    console.log(chalk.yellow("Commit aborted."));
+    print("warning", "Commit aborted.");
   }
 }
 
