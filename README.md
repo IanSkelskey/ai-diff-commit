@@ -13,14 +13,14 @@ Automates the creation of standardized Git commit messages using [OpenAI's API](
 
 ## Features
 
-- **Automated Commit Messages**: Generate standardized commit messages based on the changes in your repository.
-- **Automated Git Operations**: Automatically add, commit, and push the changes to your repository.
+-   **Automated Commit Messages**: Generate standardized commit messages based on the changes in your repository.
+-   **Automated Git Operations**: Automatically add, commit, and push the changes to your repository.
 
 ## Limitations
 
-- **OpenAI API Key**: Requires an API key from OpenAI to access the GPT-3 model for generating commit messages.
-- **Internet Connection**: Requires an active internet connection to communicate with the OpenAI API.
-- **Requires a Git Repository**: Needs to be run in a Git repository to access the changes for generating commit messages.
+-   **OpenAI API Key**: Requires an API key from OpenAI to access the GPT-3 model for generating commit messages.
+-   **Internet Connection**: Requires an active internet connection to communicate with the OpenAI API.
+-   **Requires a Git Repository**: Needs to be run in a Git repository to access the changes for generating commit messages.
 
 ## Dependencies
 
@@ -32,10 +32,10 @@ Once you have set up the script using the installation instructions, you can use
 
 ### Flags
 
-- `-a`, `--all`: Add all changes in the repository to the commit. By default, only the modified files are added.
-- `-h`, `--help`: Display help information for the script.
-- `-m`, `--model`: Specify the OpenAI API language model to use for generating commit messages.
-- `-p`, `--push`: Automatically push the changes to the remote repository after committing.
+-   `-a`, `--all`: Add all changes in the repository to the commit. By default, only the modified files are added.
+-   `-h`, `--help`: Display help information for the script.
+-   `-m`, `--model`: Specify the OpenAI API language model to use for generating commit messages.
+-   `-p`, `--push`: Automatically push the changes to the remote repository after committing.
 
 For example, to generate a commit message based on all changes in the repository and push the changes to the remote repository, you can use the following command:
 

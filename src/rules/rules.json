@@ -1,0 +1,25 @@
+{
+	"evergreen_ils.md": {
+		"name": "Evergreen ILS",
+		"description": "The commit standard for Evergreen Integrated Library System.",
+		"required": [
+			{
+				"name": "Launchpad Bug Number",
+				"type": "number"
+			},
+			{
+				"name": "Name",
+				"type": "string"
+			},
+			{
+				"name": "Email",
+				"type": "string"
+			}
+		]
+	},
+	"conventional_commits.md": {
+		"name": "Conventional Commits",
+		"description": "The commit standard for Conventional Commits.",
+		"required": []
+	}
+}

@@ -1,15 +1,30 @@
-import { setModel, generateCommitMessage } from "./utils/aiUtils";
-import { isInGitRepo, hasGitChanges, getCurrentBranchName, getDiffForStagedFiles, commitWithMessage, pushChanges, listChangedFiles, addAllChanges, stageFile, unstageAllFiles } from "./utils/gitUtils";
-import { confirmCommitMessage, print, showHelpMenu, selectFilesToStage } from "./utils/promptUtils";
-import { Command } from "commander";
+import { setModel, createTextGeneration } from './utils/llm';
+import {
+	isInGitRepo,
+	hasGitChanges,
+	getCurrentBranchName,
+	getDiffForStagedFiles,
+	commitWithMessage,
+	pushChanges,
+	listChangedFiles,
+	addAllChanges,
+	stageFile,
+	unstageAllFiles,
+	getName,
+	getEmail
+} from './utils/git';
+import { confirmCommitMessage, print, showHelpMenu, selectFilesToStage, selectCommitStandard, promptForAdditionalRequirement } from './utils/prompt';
+import { Command } from 'commander';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const program = new Command();
 
 program
-	.option("-m, --model <model>", "Specify OpenAI model", "gpt-4o")
-	.option("-p, --push", "Automatically push changes", false)
-	.option("-a, --add", "Automatically add all changes", false)
-	.option("-h, --help", "Display help for command");
+	.option('-m, --model <model>', 'Specify OpenAI model', 'gpt-4o')
+	.option('-p, --push', 'Automatically push changes', false)
+	.option('-a, --add', 'Automatically add all changes', false)
+	.option('-h, --help', 'Display help for command');
 
 program.parse(process.argv);
 const options = program.opts();
@@ -27,36 +42,78 @@ async function main() {
 	}
 
 	const branch = getCurrentBranchName();
-	print("info", `Current branch: ${branch}`);
+	print('info', `Current branch: ${branch}`);
 
 	await handleStagingOptions();
 
 	const diff = getDiffForStagedFiles();
 
-	const commitMessage = await generateCommitMessage(diff);
+	const { name, rules } = await selectCommitStandard();
+
+	let systemPrompt: string = rules;
+
+	const additionalRequirements = getRequiredFieldsFromStandard(name);
+
+	if (additionalRequirements.length > 0) {
+		systemPrompt += '\n\nAdditional information to include in commit: ';
+	}
+
+	for (const requirement of additionalRequirements) {
+		let answer;
+		if (requirement.name.toLowerCase() === 'name') {
+			answer = getName();
+		} else if (requirement.name.toLowerCase() === 'email') {
+			answer = getEmail();
+		} else {
+			answer = await promptForAdditionalRequirement(requirement.name, requirement.description, requirement.type);
+		}
+		systemPrompt += `\n${requirement.name}: ${answer}`;
+	}
+
+	const commitMessage = await createTextGeneration(systemPrompt, diff);
+
+	if (!commitMessage) {
+		print('error', 'Commit message generation is empty. Aborting commit.');
+		process.exit(1);
+	}
 
 	await executeCommitWorkflow(commitMessage);
+
+	print('info', 'Exiting...');
+
+	process.exit(0);
 }
 
-async function executeCommitWorkflow(commitMessage: string | null) {
-	if (commitMessage && await confirmCommitMessage(commitMessage)) {
-		commitWithMessage(commitMessage);
-		print("success", "Commit successful.");
-		if (options.push) {
-			pushChanges();
-			print("success", "Push successful.");
-		}
-	} else {
+function getRequiredFieldsFromStandard(standardName: string): any[] {
+	const rulesPath = path.join(__dirname, 'rules', 'rules.json');
+	const rules = JSON.parse(fs.readFileSync(rulesPath, 'utf-8'));
+	const standard = rules[standardName];
+	if (!standard) {
+		throw new Error(`Standard ${standardName} not found.`);
+	}
+	return standard.required;
+}
+
+async function executeCommitWorkflow(commitMessage: string) {
+	const confirmed: boolean = await confirmCommitMessage(commitMessage);
+	if (!confirmed) {
 		unstageAllFiles();
-		print("warning", "Commit aborted.");
+		print('warning', 'Commit aborted.');
+		return;
+	}
+	commitWithMessage(commitMessage);
+	print('success', 'Commit successful.');
+	if (options.push) {
+		pushChanges();
+		print('success', 'Push successful.');
 	}
 }
 
 async function handleStagingOptions() {
 	if (options.add) {
-		print("info", "Adding all changes...");
+		print('info', 'Adding all changes...');
 		addAllChanges();
-		print("success", "Add successful.");
+		print('success', 'Add successful.');
 	} else {
 		const changedFiles = listChangedFiles();
 		const filesToStage = await selectFilesToStage(changedFiles);
@@ -65,19 +122,13 @@ async function handleStagingOptions() {
 }
 
 function validateWorkingDirectory(): boolean {
-	if (!isInGitRepo()) {
-		print("error", "Not in a git repository.");
+	if (!isInGitRepo() || !hasGitChanges()) {
+		print('error', !isInGitRepo() ? 'Not in a git repository.' : 'No changes detected.');
 		return false;
 	}
-
-	if (!hasGitChanges()) {
-		print("warning", "No changes detected.");
-		return false;
-	}
-
 	return true;
 }
 
 main().catch((err) => {
-	console.error("An error occurred:", err);
+	console.error('An error occurred:', err);
 });
