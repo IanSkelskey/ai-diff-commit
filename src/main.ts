@@ -10,8 +10,6 @@ import {
   addAllChanges,
   stageFile,
   unstageAllFiles,
-  getStatusForFile,
-  GitFileStatus,
 } from './utils/gitUtils';
 import {
   confirmCommitMessage,
