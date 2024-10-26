@@ -7,9 +7,6 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 - [ ] Allow manual editing of commit messages before committing the changes.
 - [ ] If push is blocked due to branch protection rules, notify the user.
   - Currently, the script just fails silently and displays a success message which is misleading.
-- [ ] Add support for Linux and macOS.
-  - [ ] Linux
-  - [x] macOS
 - [ ] Add option to select all files within a directory.
 - [ ] Option to generate a short commit message without a description. (One-liner)
 - [ ] If the remote branch does not exist, create it.
@@ -24,26 +21,15 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
     - comgen
 - [ ] OpenAI Assistant for generating commit messages.
 - [ ] Make a way to update the OpenAI API key.
-  - [ ] If the key is invalid, prompt the user to update it.
+  - [x] If the key is invalid, prompt the user to update it.
   - [ ] Add a flag to update/remove the key.
-- [ ] Decide on a distribution method for the script.
-  - [ ] Create a release on GitHub.
-  - PyPI package.
-  - Homebrew formula.
-  - AUR package.
-  - Snap package.
-  - Chocolatey package.
-  - npm package.
-  - Docker image.
-  - GitHub release.
-  - Manual installation.
-  - Other package manager
+- [x] Decide on a distribution method for the script: NPM
+  - [ ] Create a release on GitHub?
 - [ ] Release the script to the public as an open-source project.
 - [ ] Accept donations for the project.
 - [ ] Add contribution guidelines.
 - [ ] Add branch protection rules.
 - [ ] Spaces in file names throw errors.
-- [ ] Sometimes there are trailing backticks in the commit message.
 - [ ] Reference [AICommits](https://github.com/Nutlope/aicommits) for inspiration.
   - Study the release strategy.
   - Study the documentation.
