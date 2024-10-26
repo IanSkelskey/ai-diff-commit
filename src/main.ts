@@ -91,17 +91,11 @@ async function handleStagingOptions() {
 }
 
 function validateWorkingDirectory(): boolean {
-    if (!isInGitRepo()) {
-        print('error', 'Not in a git repository.');
-        return false;
-    }
-
-    if (!hasGitChanges()) {
-        print('warning', 'No changes detected.');
-        return false;
-    }
-
-    return true;
+	if (!isInGitRepo() || !hasGitChanges()) {
+		print('error', !isInGitRepo() ? 'Not in a git repository.' : 'No changes detected.');
+		return false;
+	}
+	return true;
 }
 
 main().catch((err) => {
