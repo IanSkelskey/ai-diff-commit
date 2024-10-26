@@ -1,5 +1,16 @@
 import { execSync } from "child_process";
 
+export enum GitFileStatus {
+	"A" = "Added",
+	"M" = "Modified",
+	"D" = "Deleted",
+	"R" = "Renamed",
+	"C" = "Copied",
+	"U" = "Unmerged",
+	"?" = "Untracked",
+	"!" = "Ignored"
+}
+
 export function isInGitRepo(): boolean {
 	try {
 		execSync("git rev-parse --is-inside-work-tree", { stdio: "ignore" });
@@ -31,6 +42,14 @@ export function unstageAllFiles(): void {
 
 export function listChangedFiles(): string[] {
 	return execSync("git diff --name-only").toString().split("\n").filter(Boolean);
+}
+
+export function getStatusForFile(filePath: string): GitFileStatus {
+	const status = execSync(`git status --porcelain "${filePath}"`).toString().trim();
+	if (!status) {
+		return GitFileStatus["!"];
+	}
+	return status.charAt(0) as GitFileStatus;
 }
 
 export function getDiffForAll(): string {

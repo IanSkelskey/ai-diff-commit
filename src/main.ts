@@ -1,5 +1,5 @@
 import { setModel, generateCommitMessage } from "./utils/aiUtils";
-import { isInGitRepo, hasGitChanges, getCurrentBranchName, getDiffForStagedFiles, commitWithMessage, pushChanges, listChangedFiles, addAllChanges, stageFile, unstageAllFiles } from "./utils/gitUtils";
+import { isInGitRepo, hasGitChanges, getCurrentBranchName, getDiffForStagedFiles, commitWithMessage, pushChanges, listChangedFiles, addAllChanges, stageFile, unstageAllFiles, getStatusForFile, GitFileStatus } from "./utils/gitUtils";
 import { confirmCommitMessage, print, showHelpMenu, selectFilesToStage } from "./utils/promptUtils";
 import { Command } from "commander";
 
@@ -35,20 +35,30 @@ async function main() {
 
 	const commitMessage = await generateCommitMessage(diff);
 
+	if (!commitMessage) {
+		print("error", "Commit message generation is empty. Aborting commit.");
+		process.exit(1);
+	}
+
 	await executeCommitWorkflow(commitMessage);
+
+	print("info", "Exiting...");
+
+	process.exit(0);
 }
 
-async function executeCommitWorkflow(commitMessage: string | null) {
-	if (commitMessage && await confirmCommitMessage(commitMessage)) {
-		commitWithMessage(commitMessage);
-		print("success", "Commit successful.");
-		if (options.push) {
-			pushChanges();
-			print("success", "Push successful.");
-		}
-	} else {
+async function executeCommitWorkflow(commitMessage: string) {
+	const confirmed: boolean = await confirmCommitMessage(commitMessage);
+	if (!confirmed) {
 		unstageAllFiles();
 		print("warning", "Commit aborted.");
+		return;
+	}
+	commitWithMessage(commitMessage);
+	print("success", "Commit successful.");
+	if (options.push) {
+		pushChanges();
+		print("success", "Push successful.");
 	}
 }
 
