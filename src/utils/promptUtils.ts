@@ -17,6 +17,16 @@ export async function confirmCommitMessage(commitMessage: string): Promise<boole
 	return answer.commit;
 }
 
+export async function selectFilesToStage(files: string[]): Promise<string[]> {
+	const answer = await inquirer.prompt({
+		type: "checkbox",
+		name: "files",
+		message: "Select files to stage:",
+		choices: files
+	});
+	return answer.files;
+}
+
 export function showHelpMenu(): void {
 	print("info", "Usage: ai-commit [options]");
 	console.log("\nOptions:");

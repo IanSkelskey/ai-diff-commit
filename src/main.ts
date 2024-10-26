@@ -1,6 +1,6 @@
 import { setModel, generateCommitMessage } from "./utils/aiUtils";
-import { isInGitRepo, hasGitChanges, getCurrentBranchName, getDiff, commitWithMessage, pushChanges } from "./utils/gitUtils";
-import { confirmCommitMessage, print, showHelpMenu } from "./utils/promptUtils";
+import { isInGitRepo, hasGitChanges, getCurrentBranchName, getDiffForStagedFiles, commitWithMessage, pushChanges, listChangedFiles, addAllChanges, stageFile, unstageAllFiles } from "./utils/gitUtils";
+import { confirmCommitMessage, print, showHelpMenu, selectFilesToStage } from "./utils/promptUtils";
 import { Command } from "commander";
 
 const program = new Command();
@@ -29,18 +29,38 @@ async function main() {
 	const branch = getCurrentBranchName();
 	print("info", `Current branch: ${branch}`);
 
-	const diffString = getDiff();
-	const commitMessage = await generateCommitMessage(diffString);
+	await handleStagingOptions();
 
+	const diff = getDiffForStagedFiles();
+
+	const commitMessage = await generateCommitMessage(diff);
+
+	await executeCommitWorkflow(commitMessage);
+}
+
+async function executeCommitWorkflow(commitMessage: string | null) {
 	if (commitMessage && await confirmCommitMessage(commitMessage)) {
-		commitWithMessage(sanitizeCommitMessage(commitMessage));
+		commitWithMessage(commitMessage);
 		print("success", "Commit successful.");
 		if (options.push) {
 			pushChanges();
 			print("success", "Push successful.");
 		}
 	} else {
+		unstageAllFiles();
 		print("warning", "Commit aborted.");
+	}
+}
+
+async function handleStagingOptions() {
+	if (options.add) {
+		print("info", "Adding all changes...");
+		addAllChanges();
+		print("success", "Add successful.");
+	} else {
+		const changedFiles = listChangedFiles();
+		const filesToStage = await selectFilesToStage(changedFiles);
+		filesToStage.forEach(stageFile);
 	}
 }
 
@@ -56,10 +76,6 @@ function validateWorkingDirectory(): boolean {
 	}
 
 	return true;
-}
-
-function sanitizeCommitMessage(commitMessage: string): string {
-	return commitMessage.replace(/"/g, '\\"');
 }
 
 main().catch((err) => {

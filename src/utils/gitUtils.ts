@@ -13,12 +13,37 @@ export function pushChanges(): void {
 	execSync("git push");
 }
 
-export function getDiff(): string {
+export function addAllChanges(): void {
+	execSync("git add .");
+}
+
+export function stageFile(filePath: string): void {
+	execSync(`git add ${filePath}`);
+}
+
+export function unstageFile(filePath: string): void {
+	execSync(`git restore --staged ${filePath}`);
+}
+
+export function unstageAllFiles(): void {
+	execSync("git restore --staged .");
+}
+
+export function listChangedFiles(): string[] {
+	return execSync("git diff --name-only").toString().split("\n").filter(Boolean);
+}
+
+export function getDiffForAll(): string {
 	return execSync("git diff").toString();
 }
 
+export function getDiffForStagedFiles(): string {
+	return execSync("git diff --staged").toString();
+}
+
 export function commitWithMessage(message: string): void {
-	execSync(`git commit -am "${message}"`);
+	const sanitizedMessage = sanitizeCommitMessage(message);
+	execSync(`git commit -m "${sanitizedMessage}"`);
 }
 
 export function getCurrentBranchName(): string {
@@ -28,4 +53,8 @@ export function getCurrentBranchName(): string {
 export function hasGitChanges(): boolean {
 	const status = execSync("git status --porcelain").toString().trim();
 	return status.length > 0;
+}
+
+export function sanitizeCommitMessage(message: string): string {
+	return message.replace(/"/g, '\\"');
 }
