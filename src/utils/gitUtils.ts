@@ -41,16 +41,11 @@ export function unstageAllFiles(): void {
 }
 
 export function listChangedFiles(): string[] {
-    return execSync('git diff --name-only')
-        .toString()
-        .split('\n')
-        .filter(Boolean);
+    return execSync('git diff --name-only').toString().split('\n').filter(Boolean);
 }
 
 export function getStatusForFile(filePath: string): GitFileStatus {
-    const status = execSync(`git status --porcelain "${filePath}"`)
-        .toString()
-        .trim();
+    const status = execSync(`git status --porcelain "${filePath}"`).toString().trim();
     if (!status) {
         return GitFileStatus['!'];
     }

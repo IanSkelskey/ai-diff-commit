@@ -11,12 +11,7 @@ import {
     stageFile,
     unstageAllFiles,
 } from './utils/gitUtils';
-import {
-    confirmCommitMessage,
-    print,
-    showHelpMenu,
-    selectFilesToStage,
-} from './utils/promptUtils';
+import { confirmCommitMessage, print, showHelpMenu, selectFilesToStage } from './utils/promptUtils';
 import { Command } from 'commander';
 
 const program = new Command();
@@ -91,11 +86,11 @@ async function handleStagingOptions() {
 }
 
 function validateWorkingDirectory(): boolean {
-	if (!isInGitRepo() || !hasGitChanges()) {
-		print('error', !isInGitRepo() ? 'Not in a git repository.' : 'No changes detected.');
-		return false;
-	}
-	return true;
+    if (!isInGitRepo() || !hasGitChanges()) {
+        print('error', !isInGitRepo() ? 'Not in a git repository.' : 'No changes detected.');
+        return false;
+    }
+    return true;
 }
 
 main().catch((err) => {

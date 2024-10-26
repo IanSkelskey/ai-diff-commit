@@ -8,9 +8,7 @@ const colors: Record<string, (message: string) => string> = {
     error: chalk.red,
 };
 
-export async function confirmCommitMessage(
-    commitMessage: string,
-): Promise<boolean> {
+export async function confirmCommitMessage(commitMessage: string): Promise<boolean> {
     const answer = await inquirer.prompt({
         type: 'confirm',
         name: 'commit',
@@ -32,15 +30,9 @@ export async function selectFilesToStage(files: string[]): Promise<string[]> {
 export function showHelpMenu(): void {
     print('info', 'Usage: ai-commit [options]');
     console.log('\nOptions:');
-    console.log(
-        '  -m, --model <model>  Specify OpenAI model (default: gpt-4o)',
-    );
-    console.log(
-        '  -p, --push           Automatically push changes (default: false)',
-    );
-    console.log(
-        '  -a, --add            Automatically add all changes (default: false)',
-    );
+    console.log('  -m, --model <model>  Specify OpenAI model (default: gpt-4o)');
+    console.log('  -p, --push           Automatically push changes (default: false)');
+    console.log('  -a, --add            Automatically add all changes (default: false)');
     console.log('  -h, --help           Display help for command');
 }
 
