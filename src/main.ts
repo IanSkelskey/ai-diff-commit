@@ -1,4 +1,4 @@
-import { setModel, generateCommitMessage } from './utils/aiUtils';
+import { setModel, generateCommitMessage } from './utils/llm';
 import {
     isInGitRepo,
     hasGitChanges,
@@ -10,8 +10,8 @@ import {
     addAllChanges,
     stageFile,
     unstageAllFiles,
-} from './utils/gitUtils';
-import { confirmCommitMessage, print, showHelpMenu, selectFilesToStage } from './utils/promptUtils';
+} from './utils/git';
+import { confirmCommitMessage, print, showHelpMenu, selectFilesToStage } from './utils/prompt';
 import { Command } from 'commander';
 
 const program = new Command();

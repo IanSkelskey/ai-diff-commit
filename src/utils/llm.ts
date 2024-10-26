@@ -1,5 +1,5 @@
 import { OpenAI } from 'openai';
-import { print } from './promptUtils';
+import { print } from './prompt';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
