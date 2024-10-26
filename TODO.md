@@ -24,6 +24,7 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
   - [x] If the key is invalid, prompt the user to update it.
   - [ ] Add a flag to update/remove the key.
 - [x] Decide on a distribution method for the script: NPM
+  - [ ] Publish the script to NPM.
   - [ ] Create a release on GitHub?
 - [ ] Release the script to the public as an open-source project.
 - [ ] Accept donations for the project.
