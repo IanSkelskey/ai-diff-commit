@@ -9,6 +9,10 @@ export function isInGitRepo(): boolean {
 	}
 }
 
+export function pushChanges(): void {
+	execSync("git push");
+}
+
 export function getDiff(): string {
 	return execSync("git diff").toString();
 }

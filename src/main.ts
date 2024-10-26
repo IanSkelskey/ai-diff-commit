@@ -1,5 +1,5 @@
 import { setModel, generateCommitMessage } from "./utils/aiUtils";
-import { isInGitRepo, hasGitChanges, getCurrentBranchName, getDiff, commitWithMessage } from "./utils/gitUtils";
+import { isInGitRepo, hasGitChanges, getCurrentBranchName, getDiff, commitWithMessage, pushChanges } from "./utils/gitUtils";
 import { confirmCommitMessage, print, showHelpMenu } from "./utils/promptUtils";
 import { Command } from "commander";
 
@@ -35,6 +35,10 @@ async function main() {
 	if (commitMessage && await confirmCommitMessage(commitMessage)) {
 		commitWithMessage(sanitizeCommitMessage(commitMessage));
 		print("success", "Commit successful.");
+		if (options.push) {
+			pushChanges();
+			print("success", "Push successful.");
+		}
 	} else {
 		print("warning", "Commit aborted.");
 	}
