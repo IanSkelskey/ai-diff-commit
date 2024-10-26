@@ -1,52 +1,83 @@
-import { setModel, analyzeDiffWithChatGpt } from "./utils/aiUtils";
-import { isInGitRepo, hasGitChanges, getCurrentBranchName } from "./utils/gitUtils";
-import { confirmCommitMessage } from "./utils/promptUtils";
+import { setModel, generateCommitMessage } from "./utils/aiUtils";
+import { isInGitRepo, hasGitChanges, getCurrentBranchName, getDiffForStagedFiles, commitWithMessage, pushChanges, listChangedFiles, addAllChanges, stageFile, unstageAllFiles } from "./utils/gitUtils";
+import { confirmCommitMessage, print, showHelpMenu, selectFilesToStage } from "./utils/promptUtils";
 import { Command } from "commander";
-import chalk from "chalk";
-import { execSync } from "child_process";
 
 const program = new Command();
 
 program
-  .option("-m, --model <model>", "Specify OpenAI model", "gpt-4o")
-  .option("-p, --push", "Automatically push changes", false)
-  .option("-a, --add", "Automatically add all changes", false);
+	.option("-m, --model <model>", "Specify OpenAI model", "gpt-4o")
+	.option("-p, --push", "Automatically push changes", false)
+	.option("-a, --add", "Automatically add all changes", false)
+	.option("-h, --help", "Display help for command");
 
 program.parse(process.argv);
 const options = program.opts();
 
 async function main() {
-  setModel(options.model);
+	if (options.help) {
+		showHelpMenu();
+		return;
+	}
 
-  if (!isInGitRepo()) {
-    console.error(chalk.red("Error: This program must be run inside a Git repository."));
-    process.exit(1);
-  }
+	setModel(options.model);
 
-  if (!hasGitChanges()) {
-    console.log(chalk.green("No changes to commit. Your working directory is clean."));
-    return;
-  }
+	if (!validateWorkingDirectory()) {
+		return;
+	}
 
-  const branch = getCurrentBranchName();
-  console.log(chalk.blue(`Current branch: ${branch}`));
+	const branch = getCurrentBranchName();
+	print("info", `Current branch: ${branch}`);
 
-  // Assuming this function is for getting a string representation of changes
-  const diffString = execSync("git diff").toString();
-  const commitMessage = await analyzeDiffWithChatGpt(diffString);
+	await handleStagingOptions();
 
-  if (commitMessage && await confirmCommitMessage(commitMessage)) {
-    execSync(`git commit -am "${sanitizeCommitMessage(commitMessage)}"`);
-    console.log(chalk.green("Changes committed successfully."));
-  } else {
-    console.log(chalk.yellow("Commit aborted."));
-  }
+	const diff = getDiffForStagedFiles();
+
+	const commitMessage = await generateCommitMessage(diff);
+
+	await executeCommitWorkflow(commitMessage);
 }
 
-function sanitizeCommitMessage(commitMessage: string): string {
-  return commitMessage.replace(/"/g, '\\"');
+async function executeCommitWorkflow(commitMessage: string | null) {
+	if (commitMessage && await confirmCommitMessage(commitMessage)) {
+		commitWithMessage(commitMessage);
+		print("success", "Commit successful.");
+		if (options.push) {
+			pushChanges();
+			print("success", "Push successful.");
+		}
+	} else {
+		unstageAllFiles();
+		print("warning", "Commit aborted.");
+	}
+}
+
+async function handleStagingOptions() {
+	if (options.add) {
+		print("info", "Adding all changes...");
+		addAllChanges();
+		print("success", "Add successful.");
+	} else {
+		const changedFiles = listChangedFiles();
+		const filesToStage = await selectFilesToStage(changedFiles);
+		filesToStage.forEach(stageFile);
+	}
+}
+
+function validateWorkingDirectory(): boolean {
+	if (!isInGitRepo()) {
+		print("error", "Not in a git repository.");
+		return false;
+	}
+
+	if (!hasGitChanges()) {
+		print("warning", "No changes detected.");
+		return false;
+	}
+
+	return true;
 }
 
 main().catch((err) => {
-  console.error("An error occurred:", err);
+	console.error("An error occurred:", err);
 });

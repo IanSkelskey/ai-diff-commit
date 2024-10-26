@@ -4,7 +4,7 @@
 	"description": "A CLI tool to generate commit messages using AI, powered by OpenAI.",
 	"main": "dist/main.js",
 	"bin": {
-		"ai-diff-commit": "./dist/main.js"
+		"ai-diff-commit": "dist/main.js"
 	},
 	"scripts": {
 		"build": "tsc",

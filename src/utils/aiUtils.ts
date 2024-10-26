@@ -7,7 +7,7 @@ export function setModel(modelName: string): void {
   MODEL = modelName;
 }
 
-export async function analyzeDiffWithChatGpt(diffString: string): Promise<string | null> {
+export async function generateCommitMessage(diffString: string): Promise<string | null> {
   try {
     const completion = await client.chat.completions.create({
       model: MODEL,
