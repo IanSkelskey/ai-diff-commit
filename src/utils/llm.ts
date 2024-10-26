@@ -1,19 +1,14 @@
 import { OpenAI } from 'openai';
 import { print } from './prompt';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 
 let MODEL = 'gpt-4o';
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
-const systemPromptPath = join(__dirname, '../../lib/rules/conventional_commits.md');
-const systemPrompt = readFileSync(systemPromptPath, 'utf-8');
 
 export function setModel(modelName: string): void {
 	MODEL = modelName;
 }
 
-export async function generateCommitMessage(diffString: string): Promise<string | null> {
+export async function createTextGeneration(system_prompt: string, user_prompt: string): Promise<string | null> {
 	if (!process.env.OPENAI_API_KEY) {
 		print('error', 'OpenAI API key not found. Please set it in the OPENAI_API_KEY environment variable.');
 		return null;
@@ -24,14 +19,14 @@ export async function generateCommitMessage(diffString: string): Promise<string 
 			messages: [
 				{
 					role: 'system',
-					content: systemPrompt,
+					content: system_prompt,
 				},
-				{ role: 'user', content: diffString },
+				{ role: 'user', content: user_prompt },
 			],
 		});
 		return completion.choices[0]?.message?.content?.trim() || null;
 	} catch (error: any) {
-		print('error', `An error occurred while generating commit message: ${(error as Error).message}`);
+		print('error', `An error occurred while generating text: ${(error as Error).message}`);
 		return null;
 	}
 }

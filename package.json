@@ -7,7 +7,7 @@
         "ai-diff-commit": "dist/main.js"
     },
     "scripts": {
-        "build": "tsc",
+        "build": "tsc && xcopy src\\rules dist\\rules /E /I",
         "format": "prettier --write .",
         "format-check": "prettier --check .",
         "start": "node dist/main.js"

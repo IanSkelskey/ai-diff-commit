@@ -41,8 +41,10 @@ export function unstageAllFiles(): void {
 }
 
 export function listChangedFiles(): string[] {
-    return execSync('git diff --name-only').toString().split('\n').filter(Boolean);
-}
+    const statusOutput = execSync('git status --porcelain').toString().trim();
+    return statusOutput.split('\n').map(line => line.trim().slice(2)).filter(Boolean);
+  }
+  
 
 export function getStatusForFile(filePath: string): GitFileStatus {
     const status = execSync(`git status --porcelain "${filePath}"`).toString().trim();
@@ -72,6 +74,14 @@ export function getCurrentBranchName(): string {
 export function hasGitChanges(): boolean {
     const status = execSync('git status --porcelain').toString().trim();
     return status.length > 0;
+}
+
+export function getName(): string {
+    return execSync('git config user.name').toString().trim();
+}
+
+export function getEmail(): string {
+    return execSync('git config user.email').toString().trim();
 }
 
 export function sanitizeCommitMessage(message: string): string {
