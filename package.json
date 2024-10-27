@@ -8,6 +8,7 @@
     },
     "scripts": {
         "build": "tsc && xcopy src\\rules dist\\rules /E /I",
+        "build-ci": "tsc && cp -r src/rules dist/rules",
         "format": "prettier --write .",
         "format-check": "prettier --check .",
         "start": "node dist/main.js"

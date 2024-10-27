@@ -27,7 +27,7 @@ jobs:
 
       # Step 4: Build the project
       - name: Build the project
-        run: npm run build
+        run: npm run build-ci
 
       # Step 5: Publish to npm
       - name: Publish to npm
