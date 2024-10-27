@@ -15,7 +15,7 @@ import {
 	getName,
 	getEmail
 } from './utils/git';
-import { confirmCommitMessage, print, showHelpMenu, selectFilesToStage, selectCommitStandard, promptForAdditionalRequirement } from './utils/prompt';
+import { confirmCommitMessage, print, showHelpMenu, selectFilesToStage, selectCommitStandard, promptForAdditionalRequirement, requestFeedback } from './utils/prompt';
 import { Command } from 'commander';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -70,16 +70,9 @@ async function main() {
 			answer = await promptForAdditionalRequirement(requirement.name, requirement.description, requirement.type);
 		}
 		systemPrompt += `\n${requirement.name}: ${answer}`;
-	}
+	}	
 
-	const commitMessage = await createTextGeneration(systemPrompt, diff);
-
-	if (!commitMessage) {
-		print('error', 'Commit message generation is empty. Aborting commit.');
-		process.exit(1);
-	}
-
-	await executeCommitWorkflow(commitMessage);
+	await executeCommitWorkflow(systemPrompt, diff);
 
 	print('info', 'Exiting...');
 
@@ -96,14 +89,30 @@ function getRequiredFieldsFromStandard(standardName: string): any[] {
 	return standard.required;
 }
 
-async function executeCommitWorkflow(commitMessage: string) {
+async function executeCommitWorkflow(systemPrompt: string, diff: string) {
+	let commitMessage = await createTextGeneration(systemPrompt, diff);
+
+	if (!commitMessage) {
+		print('error', 'Commit message generation is empty. Aborting commit.');
+		process.exit(1);
+	}
 	const confirmed: boolean = await confirmCommitMessage(commitMessage);
 	if (!confirmed) {
-		unstageAllFiles();
-		print('warning', 'Commit aborted.');
-		return;
+		const feedback: string = await requestFeedback();
+		if (feedback === '') {
+			unstageAllFiles();
+			print('warning', 'Commit aborted.');
+			return;
+		}
+		const feedbackMessage = 'Commit message:\n' + commitMessage + '\nFeedback:\n' + feedback;
+		commitMessage = await createTextGeneration('Please revise the commit message according to the feedback.', feedbackMessage);
 	}
-	commitWithMessage(commitMessage);
+	if (commitMessage) {
+		commitWithMessage(commitMessage);
+	} else {
+		print('error', 'Commit message is null. Aborting commit.');
+		process.exit(1);
+	}
 	print('success', 'Commit successful.');
 	if (options.push) {
 		pushChanges();
