@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { setModel, createTextGeneration } from './utils/llm';
 import {
 	isInGitRepo,
@@ -13,7 +15,7 @@ import {
 	getName,
 	getEmail
 } from './utils/git';
-import { confirmCommitMessage, print, showHelpMenu, selectFilesToStage, selectCommitStandard, promptForAdditionalRequirement } from './utils/prompt';
+import { confirmCommitMessage, print, showHelpMenu, selectFilesToStage, selectCommitStandard, promptForAdditionalRequirement, requestFeedback } from './utils/prompt';
 import { Command } from 'commander';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -70,14 +72,7 @@ async function main() {
 		systemPrompt += `\n${requirement.name}: ${answer}`;
 	}
 
-	const commitMessage = await createTextGeneration(systemPrompt, diff);
-
-	if (!commitMessage) {
-		print('error', 'Commit message generation is empty. Aborting commit.');
-		process.exit(1);
-	}
-
-	await executeCommitWorkflow(commitMessage);
+	await executeCommitWorkflow(systemPrompt, diff);
 
 	print('info', 'Exiting...');
 
@@ -94,15 +89,36 @@ function getRequiredFieldsFromStandard(standardName: string): any[] {
 	return standard.required;
 }
 
-async function executeCommitWorkflow(commitMessage: string) {
-	const confirmed: boolean = await confirmCommitMessage(commitMessage);
-	if (!confirmed) {
-		unstageAllFiles();
-		print('warning', 'Commit aborted.');
-		return;
+async function executeCommitWorkflow(systemPrompt: string, diff: string) {
+	let commitMessage = await createTextGeneration(systemPrompt, diff);
+
+	if (!commitMessage) {
+		print('error', 'Commit message generation is empty. Aborting commit.');
+		process.exit(1);
 	}
+
+	let confirmed = false;
+	while (!confirmed) {
+		confirmed = await confirmCommitMessage(commitMessage);
+		if (!confirmed) {
+			const feedback = await requestFeedback();
+			if (feedback === '') {
+				unstageAllFiles();
+				print('warning', 'Commit aborted.');
+				return;
+			}
+			const feedbackMessage: string = 'Standards:\n' + systemPrompt + 'Commit message:\n' + commitMessage + '\nFeedback:\n' + feedback;
+			commitMessage = await createTextGeneration('Please revise the commit message according to the feedback.', feedbackMessage);
+			if (!commitMessage) {
+				print('error', 'Commit message generation is empty after feedback. Aborting commit.');
+				process.exit(1);
+			}
+		}
+	}
+
 	commitWithMessage(commitMessage);
 	print('success', 'Commit successful.');
+
 	if (options.push) {
 		pushChanges();
 		print('success', 'Push successful.');

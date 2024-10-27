@@ -20,6 +20,11 @@
 	"conventional_commits.md": {
 		"name": "Conventional Commits",
 		"description": "The commit standard for Conventional Commits.",
-		"required": []
+		"required": [
+			{
+				"name": "Use Short Message",
+				"type": "boolean"
+			}
+		]
 	}
 }

@@ -22,6 +22,25 @@ export async function confirmCommitMessage(commitMessage: string): Promise<boole
     return answer.commit;
 }
 
+export async function requestFeedback(): Promise<string> {
+    const answer = await inquirer.prompt({
+        type: 'confirm',
+        name: 'tryAgain',
+        message: 'Would you like to provide feedback on the commit message and try again?',
+    });
+    if (!answer.tryAgain) {
+        return '';
+    }
+
+    const feedbackAnswer = await inquirer.prompt({
+        type: 'input',
+        name: 'feedback',
+        message: 'Please provide feedback:',
+    });
+    return feedbackAnswer.feedback;
+
+}
+
 export async function selectFilesToStage(files: string[]): Promise<string[]> {
     const answer = await inquirer.prompt({
         type: 'checkbox',
@@ -32,7 +51,7 @@ export async function selectFilesToStage(files: string[]): Promise<string[]> {
     return answer.files;
 }
 
-export async function selectCommitStandard(): Promise<{name: string, rules: string}> {
+export async function selectCommitStandard(): Promise<{ name: string, rules: string }> {
     const rulesDir = path.resolve(__dirname, '../rules');
     const files = fs.readdirSync(rulesDir).filter(file => file.endsWith('.md'));
     const choices = files.map(file => file);
@@ -47,7 +66,7 @@ export async function selectCommitStandard(): Promise<{name: string, rules: stri
     const filename: string = answer.standard;
     const selectedFilePath = path.join(rulesDir, filename);
     const fileContents = fs.readFileSync(selectedFilePath, 'utf-8');
-    return {name: filename, rules: fileContents};
+    return { name: filename, rules: fileContents };
 }
 
 export async function promptForAdditionalRequirement(name: string, description: string, datatype: string): Promise<string> {
@@ -78,9 +97,10 @@ export async function promptForAdditionalRequirement(name: string, description: 
 
 
 export function showHelpMenu(): void {
-    print('info', 'Usage: ai-commit [options]');
+    print('info', 'Usage: comgen [options]');
     console.log('\nOptions:');
     console.log('  -m, --model <model>  Specify OpenAI model (default: gpt-4o)');
+    console.log('                       Available models can be found at https://platform.openai.com/docs/models/');
     console.log('  -p, --push           Automatically push changes (default: false)');
     console.log('  -a, --add            Automatically add all changes (default: false)');
     console.log('  -h, --help           Display help for command');

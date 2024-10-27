@@ -11,13 +11,13 @@ As an AI, you are expected to generate commit messages for the Evergreen ILS pro
 6. **Sign-off(s)**: Conclude with one or more "Signed-off-by" lines, including the author and any reviewers.
 
 ## Commit Message Template
-LP#<bug_number>: <brief description of the change>
+LP#bug_number: brief description of the change
 
-<Optional longer description of the change> - Describe key changes made to code or configuration - Mention any relevant new configurations, permissions, or settings - Use a bulleted list for readability
+Optional longer description of the change - Describe key changes made to code or configuration - Mention any relevant new configurations, permissions, or settings - Use a bulleted list for readability
 
-Release-Note: <present-tense summary of the fix or feature added>
+Release-Note: present-tense summary of the fix or feature added
 
-Signed-off-by: <your name> your_email@example.com
+Signed-off-by: your name <your_email@example.com>
 
 ## Additional Rules
 - Use **present tense** for the Release-Note entry.

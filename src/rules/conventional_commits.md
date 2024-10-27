@@ -23,7 +23,13 @@ As a bot generating Git commit messages, you will:
 
 ## Examples
 
-### feat: add new feature
+### Short Commit Message
+
+fix: typo in README
+
+### Long Commit Message
+
+feat: add new feature
 
 This commit introduces a new feature that improves functionality.
 
