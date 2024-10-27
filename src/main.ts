@@ -70,7 +70,7 @@ async function main() {
 			answer = await promptForAdditionalRequirement(requirement.name, requirement.description, requirement.type);
 		}
 		systemPrompt += `\n${requirement.name}: ${answer}`;
-	}	
+	}
 
 	await executeCommitWorkflow(systemPrompt, diff);
 
@@ -96,24 +96,29 @@ async function executeCommitWorkflow(systemPrompt: string, diff: string) {
 		print('error', 'Commit message generation is empty. Aborting commit.');
 		process.exit(1);
 	}
-	const confirmed: boolean = await confirmCommitMessage(commitMessage);
-	if (!confirmed) {
-		const feedback: string = await requestFeedback();
-		if (feedback === '') {
-			unstageAllFiles();
-			print('warning', 'Commit aborted.');
-			return;
+
+	let confirmed = false;
+	while (!confirmed) {
+		confirmed = await confirmCommitMessage(commitMessage);
+		if (!confirmed) {
+			const feedback = await requestFeedback();
+			if (feedback === '') {
+				unstageAllFiles();
+				print('warning', 'Commit aborted.');
+				return;
+			}
+			const feedbackMessage: string = 'Standards:\n' + systemPrompt + 'Commit message:\n' + commitMessage + '\nFeedback:\n' + feedback;
+			commitMessage = await createTextGeneration('Please revise the commit message according to the feedback.', feedbackMessage);
+			if (!commitMessage) {
+				print('error', 'Commit message generation is empty after feedback. Aborting commit.');
+				process.exit(1);
+			}
 		}
-		const feedbackMessage = 'Commit message:\n' + commitMessage + '\nFeedback:\n' + feedback;
-		commitMessage = await createTextGeneration('Please revise the commit message according to the feedback.', feedbackMessage);
 	}
-	if (commitMessage) {
-		commitWithMessage(commitMessage);
-	} else {
-		print('error', 'Commit message is null. Aborting commit.');
-		process.exit(1);
-	}
+
+	commitWithMessage(commitMessage);
 	print('success', 'Commit successful.');
+
 	if (options.push) {
 		pushChanges();
 		print('success', 'Push successful.');
