@@ -4,70 +4,57 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 
 ## Upcoming Features:
 
-- [ ] Allow manual editing of commit messages before committing the changes.
-- [ ] If push is blocked due to branch protection rules, notify the user.
-  - Currently, the script just fails silently and displays a success message which is misleading.
-- [ ] Add support for Linux and macOS.
-  - [ ] Linux
-  - [x] macOS
-- [ ] Add option to select all files within a directory.
-- [ ] Option to generate a short commit message without a description. (One-liner)
-- [ ] If the remote branch does not exist, create it.
-  - i.e. set upstream to the remote branch. maybe just pass the actual git message from this to the user.
-  - Currently, the script fails silently if the remote branch does not exist and displays a success message which is misleading.
-- [ ] Add optional organization instructions.
-  - [ ] Project specific scope definitions and descriptions. e.g. `(backend)`: for backend changes, `(frontend)`: for frontend changes, etc.
-  - [ ] Any organization-specific instructions.
-- [ ] Add an easy way to quit the script.
-- [ ] Come up with a better name for the script.
-  - `ai_diff_commit` is too long.
-    - comgen
-- [ ] OpenAI Assistant for generating commit messages.
-- [ ] Make a way to update the OpenAI API key.
-  - [ ] If the key is invalid, prompt the user to update it.
-  - [ ] Add a flag to update/remove the key.
-- [ ] Decide on a distribution method for the script.
-  - [ ] Create a release on GitHub.
-  - PyPI package.
-  - Homebrew formula.
-  - AUR package.
-  - Snap package.
-  - Chocolatey package.
-  - npm package.
-  - Docker image.
-  - GitHub release.
-  - Manual installation.
-  - Other package manager
-- [ ] Release the script to the public as an open-source project.
-- [ ] Accept donations for the project.
-- [ ] Add contribution guidelines.
-- [ ] Add branch protection rules.
-- [ ] Spaces in file names throw errors.
-- [ ] Sometimes there are trailing backticks in the commit message.
-- [ ] Reference [AICommits](https://github.com/Nutlope/aicommits) for inspiration.
-  - Study the release strategy.
-  - Study the documentation.
-  - Compare the features.
+-   [ ] Allow manual editing of commit messages before committing the changes.
+-   [ ] If push is blocked due to branch protection rules, notify the user.
+    -   Currently, the script just fails silently and displays a success message which is misleading.
+-   [ ] Add option to select all files within a directory.
+-   [ ] Option to generate a short commit message without a description. (One-liner)
+-   [ ] If the remote branch does not exist, create it.
+    -   i.e. set upstream to the remote branch. maybe just pass the actual git message from this to the user.
+    -   Currently, the script fails silently if the remote branch does not exist and displays a success message which is misleading.
+-   [ ] Add optional organization instructions.
+    -   [ ] Project specific scope definitions and descriptions. e.g. `(backend)`: for backend changes, `(frontend)`: for frontend changes, etc.
+    -   [ ] Any organization-specific instructions.
+-   [ ] Add an easy way to quit the script.
+-   [ ] Come up with a better name for the script.
+    -   `ai_diff_commit` is too long.
+        -   comgen
+-   [ ] OpenAI Assistant for generating commit messages.
+-   [ ] Make a way to update the OpenAI API key.
+    -   [x] If the key is invalid, prompt the user to update it.
+    -   [ ] Add a flag to update/remove the key.
+-   [x] Decide on a distribution method for the script: NPM
+    -   [ ] Publish the script to NPM.
+    -   [ ] Create a release on GitHub?
+-   [ ] Release the script to the public as an open-source project.
+-   [ ] Accept donations for the project.
+-   [ ] Add contribution guidelines.
+-   [ ] Add branch protection rules.
+-   [ ] Spaces in file names throw errors.
+-   [ ] Reference [AICommits](https://github.com/Nutlope/aicommits) for inspiration.
+    -   Study the release strategy.
+    -   Study the documentation.
+    -   Compare the features.
 
 ## Completed Features:
 
-- [x] Test branch protection rules.
-- [x] Create dev branch.
-- [x] Meet with Nate about collaboration.
-- [x] Add documentation for the script.
-  - [x] Write a README.md file.
-  - [x] Generate documentation using Sphinx or similar tool.
-  - [x] Deploy documentation to a website. (Probably GitHub Pages)
-  - [x] `-h` or `--help` flag to display help information for `ai_diff_commit`.
-- [x] Create a logo for the script.
-- [x] Add terminal arguments for customization.
-  - [x] Add argument for specifying the openai API language model.
-  - [x] Add argument for automatically pushing changes.
-  - [x] Add argument to automatically add all changes.
-  - [x] Add argument for help information.
-- [x] Make automated push optional.
-- [x] Allow the user to specify the files to include in the commit.
-- [x] Automate installation and setup process.
-- [x] Improve interface while still utilizing the command line for simplicity.
-- [x] Clear the terminal before each run.
-- [x] Notify the user of what branch they are on.
+-   [x] Test branch protection rules.
+-   [x] Create dev branch.
+-   [x] Meet with Nate about collaboration.
+-   [x] Add documentation for the script.
+    -   [x] Write a README.md file.
+    -   [x] Generate documentation using Sphinx or similar tool.
+    -   [x] Deploy documentation to a website. (Probably GitHub Pages)
+    -   [x] `-h` or `--help` flag to display help information for `ai_diff_commit`.
+-   [x] Create a logo for the script.
+-   [x] Add terminal arguments for customization.
+    -   [x] Add argument for specifying the openai API language model.
+    -   [x] Add argument for automatically pushing changes.
+    -   [x] Add argument to automatically add all changes.
+    -   [x] Add argument for help information.
+-   [x] Make automated push optional.
+-   [x] Allow the user to specify the files to include in the commit.
+-   [x] Automate installation and setup process.
+-   [x] Improve interface while still utilizing the command line for simplicity.
+-   [x] Clear the terminal before each run.
+-   [x] Notify the user of what branch they are on.
