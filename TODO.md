@@ -16,15 +16,12 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
     -   [ ] Project specific scope definitions and descriptions. e.g. `(backend)`: for backend changes, `(frontend)`: for frontend changes, etc.
     -   [ ] Any organization-specific instructions.
 -   [ ] Add an easy way to quit the script.
--   [ ] Come up with a better name for the script.
-    -   `ai_diff_commit` is too long.
-        -   comgen
 -   [ ] OpenAI Assistant for generating commit messages.
 -   [ ] Make a way to update the OpenAI API key.
     -   [x] If the key is invalid, prompt the user to update it.
     -   [ ] Add a flag to update/remove the key.
 -   [x] Decide on a distribution method for the script: NPM
-    -   [ ] Publish the script to NPM.
+    -   [x] Publish the script to NPM.
     -   [ ] Create a release on GitHub?
 -   [ ] Release the script to the public as an open-source project.
 -   [ ] Accept donations for the project.
@@ -38,6 +35,9 @@ This document outlines the upcoming features and improvements for the `ai_diff_c
 
 ## Completed Features:
 
+-   [x] Come up with a better name for the script.
+    -   `ai_diff_commit` is too long.
+        -   comgen
 -   [x] Test branch protection rules.
 -   [x] Create dev branch.
 -   [x] Meet with Nate about collaboration.
