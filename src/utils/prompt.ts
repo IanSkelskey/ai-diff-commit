@@ -15,8 +15,8 @@ export async function confirmCommitMessage(commitMessage: string): Promise<boole
     print('info', 'Commit message:');
     print('content', commitMessage);
     const answer = await inquirer.prompt({
-          type: 'confirm',
-             name: 'commit',
+        type: 'confirm',
+        name: 'commit',
         message: `Do you want to commit with this message?`,
     });
     return answer.commit;
