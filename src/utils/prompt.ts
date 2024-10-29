@@ -97,7 +97,7 @@ export async function promptForAdditionalRequirement(name: string, description: 
 
 
 export function showHelpMenu(): void {
-    print('info', 'Usage: comgen [options]');
+    print('info', 'Usage: ai-diff-commit [options]');
     console.log('\nOptions:');
     console.log('  -m, --model <model>  Specify OpenAI model (default: gpt-4o)');
     console.log('                       Available models can be found at https://platform.openai.com/docs/models/');
