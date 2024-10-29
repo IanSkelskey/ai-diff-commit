@@ -14,6 +14,7 @@ import {
     unstageAllFiles,
     getName,
     getEmail,
+    setupUpstreamBranch,
 } from './utils/git';
 import {
     confirmCommitMessage,
@@ -132,7 +133,15 @@ async function executeCommitWorkflow(systemPrompt: string, diff: string) {
     print('success', 'Commit successful.');
 
     if (options.push) {
-        pushChanges();
+        try {
+            pushChanges();
+            print('success', 'Push successful.');
+        } catch (error: any) {
+            if (error.message.includes('The current branch has no upstream branch.')) {
+                setupUpstreamBranch();
+            }
+        }
+
         print('success', 'Push successful.');
     }
 }
