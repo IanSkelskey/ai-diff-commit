@@ -8,7 +8,7 @@ const colors: Record<string, (message: string) => string> = {
     success: chalk.green,
     warning: chalk.yellow,
     error: chalk.red,
-    content: chalk.grey
+    content: chalk.grey,
 };
 
 export async function confirmCommitMessage(commitMessage: string): Promise<boolean> {
@@ -38,7 +38,6 @@ export async function requestFeedback(): Promise<string> {
         message: 'Please provide feedback:',
     });
     return feedbackAnswer.feedback;
-
 }
 
 export async function selectFilesToStage(files: string[]): Promise<string[]> {
@@ -51,10 +50,10 @@ export async function selectFilesToStage(files: string[]): Promise<string[]> {
     return answer.files;
 }
 
-export async function selectCommitStandard(): Promise<{ name: string, rules: string }> {
+export async function selectCommitStandard(): Promise<{ name: string; rules: string }> {
     const rulesDir = path.resolve(__dirname, '../rules');
-    const files = fs.readdirSync(rulesDir).filter(file => file.endsWith('.md'));
-    const choices = files.map(file => file);
+    const files = fs.readdirSync(rulesDir).filter((file) => file.endsWith('.md'));
+    const choices = files.map((file) => file);
 
     const answer = await inquirer.prompt({
         type: 'list',
@@ -69,7 +68,11 @@ export async function selectCommitStandard(): Promise<{ name: string, rules: str
     return { name: filename, rules: fileContents };
 }
 
-export async function promptForAdditionalRequirement(name: string, description: string, datatype: string): Promise<string> {
+export async function promptForAdditionalRequirement(
+    name: string,
+    description: string,
+    datatype: string,
+): Promise<string> {
     let answer: any;
     if (datatype === 'number') {
         answer = await inquirer.prompt({
@@ -94,7 +97,6 @@ export async function promptForAdditionalRequirement(name: string, description: 
     }
     return answer[name];
 }
-
 
 export function showHelpMenu(): void {
     print('info', 'Usage: ai-diff-commit [options]');

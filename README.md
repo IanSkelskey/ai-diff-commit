@@ -55,7 +55,7 @@ ai-diff-commit -a -p
 
 ## Bug Reports and Feature Requests
 
-If you encounter any issues while using the script or have ideas for new features, please [open an issue on GitHub](https://github.com/IanSkelskey/ai-diff-commit/issues/new). 
+If you encounter any issues while using the script or have ideas for new features, please [open an issue on GitHub](https://github.com/IanSkelskey/ai-diff-commit/issues/new).
 
 ## License
 

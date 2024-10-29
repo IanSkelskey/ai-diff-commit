@@ -1,36 +1,36 @@
 name: Publish to npm
 
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
 
 jobs:
-  publish:
-    runs-on: ubuntu-latest
+    publish:
+        runs-on: ubuntu-latest
 
-    steps:
-      # Step 1: Checkout the code from the repository
-      - name: Checkout code
-        uses: actions/checkout@v3
+        steps:
+            # Step 1: Checkout the code from the repository
+            - name: Checkout code
+              uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js environment
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-          registry-url: 'https://registry.npmjs.org/'
+            # Step 2: Set up Node.js environment
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '20'
+                  registry-url: 'https://registry.npmjs.org/'
 
-      # Step 3: Install dependencies
-      - name: Install dependencies
-        run: npm install
+            # Step 3: Install dependencies
+            - name: Install dependencies
+              run: npm install
 
-      # Step 4: Build the project
-      - name: Build the project
-        run: npm run build-ci
+            # Step 4: Build the project
+            - name: Build the project
+              run: npm run build-ci
 
-      # Step 5: Publish to npm
-      - name: Publish to npm
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            # Step 5: Publish to npm
+            - name: Publish to npm
+              run: npm publish
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
