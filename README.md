@@ -30,7 +30,7 @@ Automates the creation of standardized Git commit messages using [OpenAI's API](
 
 ## Installation Instructions
 
-Commit Generator can be installed using npm:
+Commit Generator can be installed globally using npm:
 
 ```bash
 npm install -g ai-diff-commit
