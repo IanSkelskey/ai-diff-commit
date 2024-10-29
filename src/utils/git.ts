@@ -42,9 +42,11 @@ export function unstageAllFiles(): void {
 
 export function listChangedFiles(): string[] {
     const statusOutput = execSync('git status --porcelain').toString().trim();
-    return statusOutput.split('\n').map(line => line.trim().slice(2)).filter(Boolean);
-  }
-  
+    return statusOutput
+        .split('\n')
+        .map((line) => line.trim().slice(2))
+        .filter(Boolean);
+}
 
 export function getStatusForFile(filePath: string): GitFileStatus {
     const status = execSync(`git status --porcelain "${filePath}"`).toString().trim();

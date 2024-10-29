@@ -1,6 +1,6 @@
 # AI Diff Commit
 
-![Version](https://img.shields.io/badge/version-0.0.1-blue)
+![Version](https://img.shields.io/badge/version-0.0.2-blue)
 
 Automates the creation of standardized Git commit messages using [OpenAI's API](https://platform.openai.com/docs/).
 
@@ -52,6 +52,10 @@ For example, to generate a commit message based on all changes in the repository
 ```bash
 ai-diff-commit -a -p
 ```
+
+## Bug Reports and Feature Requests
+
+If you encounter any issues while using the script or have ideas for new features, please [open an issue on GitHub](https://github.com/IanSkelskey/ai-diff-commit/issues/new).
 
 ## License
 
