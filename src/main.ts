@@ -3,7 +3,7 @@
 import { setModel, createTextGeneration } from './utils/llm';
 import {
     isInGitRepo,
-    hasGitChanges,
+       hasGitChanges,
     getCurrentBranchName,
     getDiffForStagedFiles,
     commitWithMessage,
