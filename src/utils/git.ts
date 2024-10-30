@@ -21,7 +21,18 @@ export function isInGitRepo(): boolean {
 }
 
 export function pushChanges(): void {
-    execSync('git push');
+    try {
+        execSync('git push');
+    } catch (error: any) {
+        if (error.message.includes('fatal: The current branch')) {
+            throw new Error('The current branch has no upstream branch.');
+        }
+    }
+}
+
+export function setupUpstreamBranch() {
+    const branchName = getCurrentBranchName();
+    execSync(`git push --set-upstream origin ${branchName}`);
 }
 
 export function addAllChanges(): void {

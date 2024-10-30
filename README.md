@@ -1,6 +1,6 @@
 # AI Diff Commit
 
-![Version](https://img.shields.io/badge/version-0.0.2-blue)
+![Version](https://img.shields.io/badge/version-0.0.3-blue)
 
 Automates the creation of standardized Git commit messages using [OpenAI's API](https://platform.openai.com/docs/).
 
@@ -26,11 +26,9 @@ Automates the creation of standardized Git commit messages using [OpenAI's API](
 -   **Internet Connection**: Requires an active internet connection to communicate with the OpenAI API.
 -   **Requires a Git Repository**: Needs to be run in a Git repository to access the changes for generating commit messages.
 
-## Dependencies
-
 ## Installation Instructions
 
-Commit Generator can be installed using npm:
+Commit Generator can be installed globally using npm:
 
 ```bash
 npm install -g ai-diff-commit
@@ -46,6 +44,7 @@ Once you have set up the script using the installation instructions, you can use
 -   `-h`, `--help`: Display help information for the script.
 -   `-m`, `--model`: Specify the OpenAI API language model to use for generating commit messages. See the [OpenAI API documentation](https://platform.openai.com/docs/models/) for available models.
 -   `-p`, `--push`: Automatically push the changes to the remote repository after committing.
+    -   If a remote branch is not specified, the changes are pushed to a new remote branch with the same name as the current branch. (I plan to make this more configurable in the future.)
 
 For example, to generate a commit message based on all changes in the repository and push the changes to the remote repository, you can use the following command:
 

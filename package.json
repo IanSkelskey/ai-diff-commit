@@ -1,7 +1,8 @@
 {
     "name": "ai-diff-commit",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "A CLI tool to generate commit messages using AI, powered by OpenAI.",
+    "preferGlobal": true,
     "main": "dist/main.js",
     "bin": {
         "ai-diff-commit": "dist/main.js"
