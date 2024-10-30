@@ -1,6 +1,6 @@
 # AI Diff Commit
 
-![Version](https://img.shields.io/badge/version-0.0.2-blue)
+![Version](https://img.shields.io/badge/version-0.0.3-blue)
 
 Automates the creation of standardized Git commit messages using [OpenAI's API](https://platform.openai.com/docs/).
 
