@@ -22,7 +22,7 @@ Automates the creation of standardized Git commit messages using [OpenAI's API](
 
 ## Limitations
 
--   **OpenAI API Key**: Requires an API key from OpenAI to access the GPT-3 model for generating commit messages.
+-   **OpenAI API Key**: Requires an API key from OpenAI to access the GPT-4 model for generating commit messages.
 -   **Internet Connection**: Requires an active internet connection to communicate with the OpenAI API.
 -   **Requires a Git Repository**: Needs to be run in a Git repository to access the changes for generating commit messages.
 
