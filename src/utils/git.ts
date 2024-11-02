@@ -80,8 +80,16 @@ export function commitWithMessage(message: string): void {
     execSync(`git commit -m "${sanitizedMessage}"`);
 }
 
-export function getCurrentBranchName(): string {
-    return execSync('git rev-parse --abbrev-ref HEAD').toString().trim();
+export function getCurrentBranchName() {
+    try {
+        const branchName = execSync("git rev-parse --abbrev-ref HEAD", {
+            encoding: "utf-8",
+        }).trim();
+
+        return branchName;
+    } catch (error) {
+        throw new Error("Unable to get current branch name.");
+    }
 }
 
 export function hasGitChanges(): boolean {

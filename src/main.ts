@@ -52,8 +52,12 @@ async function main() {
         return;
     }
 
-    const branch = getCurrentBranchName();
-    print('info', `Current branch: ${branch}`);
+    try {
+        const branch = getCurrentBranchName();
+        print('info', `Current branch: ${branch}`);
+    } catch (error: any) {
+        print('error', error.message);
+    }
 
     await handleStagingOptions();
 
